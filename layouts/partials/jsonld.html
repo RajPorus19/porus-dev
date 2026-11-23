@@ -14,7 +14,7 @@
 </script>
 {{ end }}
 
-{{ if or (eq .Section "blogs") (eq .Section "projects") }}
+{{ if eq .Section "projects" }}
 {{ if .IsPage }}
 <script type="application/ld+json">
 {
