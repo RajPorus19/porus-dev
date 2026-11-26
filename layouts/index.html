@@ -7,7 +7,6 @@
         "css/home/_base.css"
         "css/home/_utils.css"
         "css/home/_layout.css"
-        "css/home/_preloader.css"
         "css/home/_hero.css"
         "css/home/_gallery.css"
         "css/home/_outro.css"
@@ -26,8 +25,6 @@
 
 {{ define "main" }}
   <div class="home">
-    {{- partial "home/preloader.html" . -}}
-
     <main>
       {{- partial "home/hero.html" . -}}
       {{- partial "home/gallery.html" . -}}

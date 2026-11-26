@@ -1,14 +1,14 @@
 /**
  * index.js — the only entry point.
  *
- * Load order matters: every module must be imported *before* the preloader
- * resolves, otherwise late subscribers miss the `home:introdone` event.
- * So: import everything first (parallel), then start the preloader.
+ * Import every module before markIntroDone, otherwise a late subscriber
+ * misses `home:introdone` and the hero reveal never starts.
  *
  * Rule of the house: anime.js animates, GSAP orchestrates scroll + pointer.
  */
 
 import { ScrollTrigger } from './libs.js';
+import { markIntroDone } from './state.js';
 
 const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 /* One definition of "can hover", used by every module. Keeping a single
@@ -22,9 +22,6 @@ const boot = async () => {
   const inits = [];
 
   /* 1. import every module the DOM needs — in parallel, no awaiting yet */
-  if (has('[data-preloader]')) {
-    loaders.push(import('./preloader.js').then((m) => ['preloader', m.initPreloader]));
-  }
   if (has('.hero')) {
     loaders.push(import('./hero.js').then((m) => ['hero', m.initHero]));
   }
@@ -45,15 +42,12 @@ const boot = async () => {
 
   const modules = new Map(await Promise.all(loaders));
 
-  /* 2. start everything except the preloader, so their listeners exist */
-  for (const [name, fn] of modules) {
-    if (name === 'preloader') continue;
+  for (const [, fn] of modules) {
     inits.push(fn({ reduced, fine }));
   }
 
-  /* 3. preloader last: it dispatches home:introdone */
-  const preloader = modules.get('preloader');
-  if (preloader) inits.push(preloader({ reduced, fine }));
+  /* The hero reveal waits on this. There is no loading screen anymore. */
+  markIntroDone();
 
   document.fonts?.ready.then(() => ScrollTrigger.refresh());
 
