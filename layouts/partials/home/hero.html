@@ -11,14 +11,14 @@
 
   {{- /* ---- copy, centred ------------------------------------------------ */}}
   <div class="hero__copy">
-    <p class="hero__intro" data-hero-fade>
+    <p class="hero__intro hero__halo" data-hero-fade>
       {{- with $hero.intro }}
         <span class="hero__dot" aria-hidden="true"></span>
         <span>{{ . }}</span>
       {{- end }}
     </p>
 
-    <h1 class="hero__title">
+    <h1 class="hero__title hero__halo">
       <span class="u-sr-only">{{ $hero.title }}</span>
       {{- range $i, $line := $hero.headline }}
         <span class="hero__line" aria-hidden="true">
@@ -27,15 +27,15 @@
       {{- end }}
     </h1>
 
-    <p class="hero__tagline" data-hero-tagline aria-live="off">
+    <p class="hero__tagline hero__halo" data-hero-tagline aria-live="off">
       {{- range $i, $word := $hero.rotating }}
         <span class="hero__tagline-item{{ if ne $i 0 }} u-sr-only{{ end }}">{{ $word }}</span>
       {{- end }}
     </p>
 
-    <p class="hero__lead u-balance" data-hero-fade>{{ $hero.content | markdownify }}</p>
+    <p class="hero__lead u-balance hero__halo" data-hero-fade>{{ $hero.content | markdownify }}</p>
 
-    <div class="hero__actions" data-hero-fade>
+    <div class="hero__actions hero__halo" data-hero-fade>
       {{- with $hero.button }}
         <a class="cta" href="{{ .url }}" data-magnetic data-cursor="link">
           {{ .name }}

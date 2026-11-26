@@ -3,13 +3,15 @@
 
    Layering inside .hero (bottom to top):
      0  .hero__bg      ascii.rest plasma (animated)
-     1  .hero__glow    readability glow that follows the cursor
+     1  .hero__glow    cursor veil — mutes the plasma, follows the pointer
      2  .hero__wash    accent bloom, ties the page to the palette
      3  .hero__copy    title, tagline, lead, CTAs — centred
+        .hero__halo::before  static readability glow, ignores the pointer
      4  .hero__cue
 
-   The plasma fills the hero edge to edge; a soft glow follows the cursor to
-   keep the copy legible.
+   Two independent paints. The halo sits behind the copy whether or not a
+   pointer is present. The veil is a separate full-hero layer: it only tracks
+   the pointer, and it never retints the halos.
    ========================================================================== */
 
 .home .hero {
@@ -51,7 +53,9 @@
     font-size: max(3vw, 4.2svh);
 }
 
-/* --- cursor-following readability glow ------------------------------------- */
+/* --- cursor veil -----------------------------------------------------------
+   Full-hero wash. --mx / --my are percentages of the hero, written by
+   hero.js. This layer does not paint the copy halos. */
 
 .home .hero__glow {
     position: absolute;
@@ -205,11 +209,41 @@
     margin-top: var(--space-4);
     font-size: var(--type-body);
     line-height: 1.65;
-    color: var(--ink-muted);
-    background: radial-gradient(ellipse at center,
-        color-mix(in srgb, var(--surface) 86%, var(--accent) 5%) 0%,
-        color-mix(in srgb, var(--surface) 50%, transparent) 55%,
-        transparent 82%);
+    color: var(--ink);
+}
+
+/* ==========================================================================
+   .hero__halo — static readability glow behind each copy block.
+   A background on the element itself is clipped to a rectangle, which is
+   why the old halo read as a muddy plate. This pseudo blooms past the
+   glyphs and fades out, and it does not consume --mx / --my.
+   ========================================================================== */
+.home .hero__halo {
+    position: relative;
+    isolation: isolate;
+}
+
+.home .hero__halo::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    inset: -0.9rem -1.5rem;
+    border-radius: 50%;
+    pointer-events: none;
+    background: radial-gradient(
+        ellipse at center,
+        color-mix(in srgb, var(--surface) 97%, var(--accent) 3%) 0%,
+        color-mix(in srgb, var(--surface) 90%, transparent) 42%,
+        color-mix(in srgb, var(--surface) 55%, transparent) 68%,
+        transparent 100%
+    );
+    filter: blur(12px);
+}
+
+/* the word is huge, so the same rem inset would be a tight stripe */
+.home .hero__title.hero__halo::before {
+    inset: -0.18em -0.06em;
+    filter: blur(0.07em);
 }
 
 /* --- actions -------------------------------------------------------------- */

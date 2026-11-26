@@ -36,13 +36,13 @@ languages:
         intro: "Disponible pour collaborer"
         title: "Porus 👋"
         subtitle: "Dev full-stack • Curiosité infinie"
-        content: "Je construis, je démonte et je comprends. Du back qui tient la charge aux interfaces qui respirent — stack agnostique, curiosité sans limite."
+        content: "Je construis, je déconstruit et j'apprends. Du back qui tient la charge aux interfaces qui émerveillent : stack agnostique, curiosité sans limite."
         headline:
           - "Porus"
         rotating:
           - "Développeur full-stack"
           - "Curieux de tout"
-          - "Constructeur"
+          - "Concepteur"
         scrollCue: "Scroll"
         photoAlt: "Cour intérieure d'un palais aux murs de zellige, un homme debout près de la fontaine, un plafond peint et une façade blanche"
         photoCaption: "Musée national du Bardo (Algérie)"
@@ -127,7 +127,7 @@ languages:
         intro: "Open to collaborate"
         title: "Porus 👋"
         subtitle: "Full-stack dev • Infinite curiosity"
-        content: "I build it, take it apart, then understand it. From backends that hold up under load to interfaces that breathe — stack agnostic, curiosity without limit."
+        content: "I build it, take it apart, then understand it. From backends that hold up under load to interfaces that take your breath away : stack agnostic, curiosity without limit."
         headline:
           - "Porus"
         rotating:
@@ -213,6 +213,9 @@ params:
   useBootstrapCDN: false
   mathjax: false
   animate: true
+  theme:
+    defaultTheme: "light"
+    disableThemeToggle: true
 
   hero:
     bottomImage:
