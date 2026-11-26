@@ -119,6 +119,30 @@ export function initHero({ reduced, fine }) {
 
   /* --- 4. photograph recession ---------------------------------------- */
   initPhotoRecession(hero);
+
+  /* --- 5. cursor-following glow --------------------------------------- */
+  if (fine) {
+    const glow = hero.querySelector('[data-hero-glow]');
+    if (glow) {
+      let raf = 0;
+      let mx = 50, my = 45;
+      const write = () => {
+        raf = 0;
+        hero.style.setProperty('--mx', mx.toFixed(2) + '%');
+        hero.style.setProperty('--my', my.toFixed(2) + '%');
+      };
+      hero.addEventListener('pointermove', (e) => {
+        const r = hero.getBoundingClientRect();
+        mx = ((e.clientX - r.left) / r.width) * 100;
+        my = ((e.clientY - r.top) / r.height) * 100;
+        if (!raf) raf = requestAnimationFrame(write);
+      });
+      hero.addEventListener('pointerleave', () => {
+        mx = 50; my = 45;
+        if (!raf) raf = requestAnimationFrame(write);
+      });
+    }
+  }
 }
 
 /**
