@@ -1,14 +1,15 @@
 /* ==========================================================================
-   _hero.css — centred copy, portrait photograph as the background.
+   _hero.css — centred copy over an ascii plasma background.
 
    Layering inside .hero (bottom to top):
-     0  .hero__frame   the photograph (whole portrait, anchored low)
-     1  .hero__wash    accent bloom, ties the photo to the palette
-     2  .hero__copy    title, tagline, lead, CTAs — centred
-     3  .hero__cue
+     0  .hero__bg      ascii.rest plasma (animated)
+     1  .hero__scrim   soft surface wash so the copy stays legible
+     2  .hero__wash    accent bloom, ties the page to the palette
+     3  .hero__copy    title, tagline, lead, CTAs — centred
+     4  .hero__cue
 
-   The photo is shown whole at its natural portrait ratio, anchored to the
-   bottom, and recedes on scroll while the copy stays centred above it.
+   The plasma fills the hero edge to edge behind a scrim that keeps the
+   centred copy legible.
    ========================================================================== */
 
 .home .hero {
@@ -20,6 +21,48 @@
     padding-block: clamp(6rem, 11vh, 8.5rem) clamp(2rem, 5vh, 3.5rem);
     overflow: clip;
     isolation: isolate;
+}
+
+/* --- ascii plasma background ---------------------------------------------- */
+
+.home .hero__bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent);
+}
+
+.home .hero__bg ascii-art {
+    display: block;
+    flex: none;
+    opacity: 0.4;
+}
+
+.home .hero__bg ascii-art pre {
+    margin: 0;
+    white-space: pre;
+    line-height: 1.2;
+    letter-spacing: 0;
+    font-size: max(3vw, 4.2svh);
+}
+
+/* --- readability scrim ----------------------------------------------------- */
+
+.home .hero__scrim {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background:
+        radial-gradient(58% 46% at 50% 36%,
+            color-mix(in srgb, var(--surface) 80%, transparent) 0%,
+            color-mix(in srgb, var(--surface) 52%, transparent) 55%,
+            color-mix(in srgb, var(--surface) 22%, transparent) 100%);
 }
 
 /* --- photograph (background layer) ---------------------------------------- */

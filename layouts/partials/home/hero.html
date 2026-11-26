@@ -1,20 +1,12 @@
 {{- $hero := .Site.Language.Params.hero | default .Site.Params.hero -}}
 <section class="hero" id="hero">
-  {{- /* ---- the photograph sits behind everything -------------------------
-         Shown whole at its natural portrait ratio and anchored to the bottom,
-         while the copy stays centred above it. The caption is attached to the
-         image itself. */}}
-  <figure class="hero__frame" data-hero-frame>
-    <div class="hero__photo" data-hero-photo>
-      <img src="{{ "/images/new-background-pic.png" | relURL }}"
-           alt="{{ $hero.photoAlt }}"
-           width="3024" height="4032"
-           fetchpriority="high" decoding="async">
-    </div>
-    <figcaption class="hero__caption">{{ $hero.photoCaption }}</figcaption>
-  </figure>
+  {{- /* ---- ascii plasma background --------------------------------------- */}}
+  <div class="hero__bg" aria-hidden="true">
+    <ascii-art piece="plasma"></ascii-art>
+  </div>
+  <div class="hero__scrim" aria-hidden="true"></div>
 
-  {{- /* accent bloom, above the photo, below the copy */}}
+  {{- /* accent bloom, ties the page to the palette */}}
   <div class="hero__wash" aria-hidden="true"></div>
 
   {{- /* ---- copy, centred ------------------------------------------------ */}}
