@@ -139,24 +139,13 @@
     font-size: 1.05rem;
     line-height: 1.55;
     max-width: 34rem;
-}
-
-/* soft surface bloom, same idea as the home halo, so the line stays
-   readable where the field passes behind it */
-.work__lead::before {
-    content: "";
-    position: absolute;
-    z-index: -1;
-    inset: -0.7rem -1.25rem;
-    border-radius: 50%;
-    pointer-events: none;
-    background: radial-gradient(
-        ellipse at center,
-        var(--surface) 0%,
-        color-mix(in srgb, var(--surface) 88%, transparent) 46%,
-        transparent 78%
-    );
-    filter: blur(12px);
+    padding: 0.2rem 0.55rem;
+    margin-inline: -0.55rem;
+    border-radius: 999px;
+    background: var(--surface);
+    box-shadow:
+        0 0 12px 8px var(--surface),
+        0 0 28px 16px var(--surface);
 }
 
 /* --- toolbar --------------------------------------------------------- */
