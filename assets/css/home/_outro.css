@@ -51,21 +51,17 @@
     color: var(--ink);
 }
 
-/* the decorative ascii badge — aria-hidden, never the h1 */
-.home .outro__ascii {
-    margin-top: var(--space-8);
-    color: var(--accent);
-    opacity: 0.55;
-    font-size: clamp(9px, 1.1vw, 13px);
-    line-height: 1.15;
-    overflow: clip;
-}
-
-.home .outro__ascii-fallback {
+/* closing wordmark: oversized type, clipped at the baseline */
+.home .outro__mark {
+    margin-top: var(--space-7);
     font-family: "Alata", sans-serif;
-    font-size: var(--type-title);
-    letter-spacing: -0.03em;
+    font-size: clamp(5rem, 21vw, 17rem);
+    line-height: 0.78;
+    letter-spacing: -0.05em;
     text-transform: uppercase;
-    opacity: 1;
+    color: transparent;
+    -webkit-text-stroke: 1px color-mix(in srgb, var(--ink) 26%, transparent);
+    user-select: none;
+    overflow: clip;
 }
 

@@ -1,46 +1,145 @@
 /* ==========================================================================
- _hero.css
- ========================================================================== */
+   _hero.css — centred hero over a photographic background.
 
-/* layered below bootstrap: .home scoping + explicit element reset beats .h1,h1 */
+   Stacking order inside .hero:
+     1  .hero__bg         the photograph + scrim (z-index 0)
+     2  .hero__canvas     ambient dots (z-index 1, above the photo, very faint)
+     3  .hero__center     the content column (z-index 2)
+   ========================================================================== */
+
 .home .hero {
+    position: relative;
     min-height: 100svh;
+    display: grid;
+    place-items: center;
+    padding-block: clamp(6rem, 12vh, 9rem) clamp(5rem, 10vh, 7rem);
+    overflow: clip;
+    isolation: isolate;
+}
+
+/* --- background ----------------------------------------------------------- */
+
+.home .hero__bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+}
+
+.home .hero__bg-media,
+.home .hero__bg-media img {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.home .hero__bg-media img {
+    object-fit: cover;
+    object-position: center 38%;
+    /* the photo is decorative; a slow drift keeps it from feeling static */
+    animation: hero-drift 32s var(--ease-in-out) infinite alternate;
+    will-change: transform;
+}
+
+@keyframes hero-drift {
+    from { transform: scale(1.06) translate3d(0, 0, 0); }
+    to   { transform: scale(1.12) translate3d(-1.5%, -1%, 0); }
+}
+
+/* Three stacked passes so the photo still reads as a photograph:
+   1. a soft vignette that pulls attention to the centre
+   2. a radial "spotlight" behind the text column only, so the middle is
+      legible while the edges of the image stay open
+   3. a top gradient for navbar contrast and a bottom gradient for the cue */
+.home .hero__bg-scrim {
+    position: absolute;
+    inset: 0;
+    background:
+        /* vignette */
+        radial-gradient(120% 90% at 50% 45%,
+            transparent 38%,
+            color-mix(in srgb, #06070b 62%, transparent) 100%),
+        /* text column spotlight */
+        radial-gradient(58% 46% at 50% 48%,
+            color-mix(in srgb, #06070b 52%, transparent) 0%,
+            color-mix(in srgb, #06070b 26%, transparent) 58%,
+            transparent 100%),
+        /* navbar + scroll cue */
+        linear-gradient(to bottom,
+            color-mix(in srgb, #06070b 70%, transparent) 0%,
+            color-mix(in srgb, #06070b 12%, transparent) 18%,
+            transparent 34%,
+            transparent 74%,
+            color-mix(in srgb, #06070b 78%, transparent) 100%);
+    backdrop-filter: saturate(0.92);
+    -webkit-backdrop-filter: saturate(0.92);
+}
+
+/* --- ambient canvas ------------------------------------------------------- */
+
+.home .hero__canvas {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    opacity: 0.28;
+    pointer-events: none;
+}
+
+/* --- content column ------------------------------------------------------- */
+
+.home .hero__center {
+    position: relative;
+    z-index: 2;
+    width: var(--shell);
+    display: grid;
+    place-items: center;
+    text-align: center;
+}
+
+.home .hero__stack {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    padding-block: clamp(6rem, 14vh, 10rem) var(--space-8);
-    position: relative;
-    overflow: clip;
+    align-items: center;
+    max-width: 54rem;
 }
+
+/* --- intro line ----------------------------------------------------------- */
 
 .home .hero__intro {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: var(--space-3);
     font-size: var(--type-mono);
     font-family: ui-monospace, "SFMono-Regular", Menlo, monospace;
     letter-spacing: 0.16em;
     text-transform: uppercase;
-    color: var(--ink-muted);
+    color: color-mix(in srgb, #ffffff 72%, transparent);
+    margin-bottom: var(--space-4);
 }
 
 .home .hero__dot {
-    width: 0.5rem;
-    height: 0.5rem;
+    width: 0.45rem;
+    height: 0.45rem;
     border-radius: 50%;
     background: var(--accent);
     flex: none;
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent);
 }
+
+/* --- title ---------------------------------------------------------------- */
 
 .home .hero__title {
     font-size: var(--type-mega);
     line-height: 0.84;
     letter-spacing: -0.045em;
-    margin-block: var(--space-4) 0;
     text-transform: uppercase;
+    /* on a photo, white is the only colour that reads at this size */
+    color: #ffffff;
+    text-shadow: 0 2px 40px rgba(0, 0, 0, 0.35);
 }
 
-/* each line is a clipping mask; the inner span is what JS moves */
 .home .hero__line {
     display: block;
     overflow: hidden;
@@ -51,12 +150,14 @@
     will-change: transform;
 }
 
+/* --- tagline / lead ------------------------------------------------------- */
+
 .home .hero__tagline {
     font-family: "Alata", sans-serif;
     font-size: var(--type-title);
-    color: var(--ink-muted);
+    color: color-mix(in srgb, #ffffff 76%, transparent);
     min-height: 1.2em;
-    margin-block: var(--space-5) 0;
+    margin-top: var(--space-5);
 }
 
 .home .hero__tagline-item {
@@ -64,21 +165,25 @@
 }
 
 .home .hero__lead {
-    max-width: 46ch;
-    color: var(--ink-muted);
-    margin-block: var(--space-5) 0;
+    max-width: 42ch;
+    margin-top: var(--space-4);
     font-size: var(--type-body);
+    line-height: 1.6;
+    color: color-mix(in srgb, #ffffff 74%, transparent);
+    text-shadow: 0 1px 18px rgba(0, 0, 0, 0.4);
 }
+
+/* --- actions -------------------------------------------------------------- */
 
 .home .hero__actions {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
+    justify-content: center;
     gap: var(--space-4);
-    margin-block: var(--space-7) 0;
+    margin-top: var(--space-7);
 }
 
-/* --- CTA ------------------------------------------------------------- */
 .home .cta {
     display: inline-flex;
     align-items: center;
@@ -86,11 +191,11 @@
     padding: 0.95rem 2rem;
     border-radius: var(--radius-pill);
     background: var(--accent);
-    color: #fff;
+    color: #ffffff;
     font-family: "Alata", sans-serif;
     font-size: 1rem;
-    font-weight: 400;
     will-change: transform;
+    box-shadow: 0 10px 34px -8px color-mix(in srgb, var(--accent) 70%, transparent);
 }
 
 .home .cta__arrow {
@@ -103,29 +208,42 @@
 }
 
 .home .cta:focus-visible {
-    outline: 2px solid var(--accent);
+    outline: 2px solid #ffffff;
     outline-offset: 3px;
 }
 
+/* ghost button reads as glass over the photo */
 .home .ghost {
     display: inline-flex;
     align-items: center;
     gap: var(--space-2);
-    padding-block: 0.4rem;
-    border-bottom: 1px solid var(--hairline);
-    color: var(--ink-muted);
-    transition: color var(--dur-2) var(--ease-out), border-color var(--dur-2) var(--ease-out);
+    padding: 0.95rem 1.75rem;
+    border-radius: var(--radius-pill);
+    border: 1px solid color-mix(in srgb, #ffffff 34%, transparent);
+    background: color-mix(in srgb, #ffffff 8%, transparent);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: #ffffff;
+    transition: background-color var(--dur-2) var(--ease-out),
+                border-color var(--dur-2) var(--ease-out);
 }
 
 .home .ghost:hover {
-    color: var(--ink);
-    border-color: var(--ink);
+    background: color-mix(in srgb, #ffffff 16%, transparent);
+    border-color: color-mix(in srgb, #ffffff 58%, transparent);
 }
 
-/* --- scroll cue ------------------------------------------------------ */
+.home .ghost:focus-visible {
+    outline: 2px solid #ffffff;
+    outline-offset: 3px;
+}
+
+/* --- scroll cue ----------------------------------------------------------- */
+
 .home .hero__cue {
     position: absolute;
-    bottom: var(--space-6);
+    z-index: 2;
+    bottom: var(--space-5);
     left: 50%;
     translate: -50% 0;
     display: flex;
@@ -135,23 +253,53 @@
     font-size: var(--type-mono);
     letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: var(--ink-muted);
+    color: color-mix(in srgb, #ffffff 55%, transparent);
 }
 
 .home .hero__cue-line {
     width: 1px;
-    height: 3rem;
-    background: linear-gradient(to bottom, var(--hairline), transparent);
+    height: 2.5rem;
+    background: linear-gradient(to bottom,
+        color-mix(in srgb, #ffffff 45%, transparent),
+        transparent);
 }
 
-/* --- ambient canvas -------------------------------------------------- */
-.home .hero__canvas {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0.35;
-    pointer-events: none;
-    z-index: -1;
+/* --- responsive ----------------------------------------------------------- */
+
+@media (max-width: 899px) {
+    /* the photo is a portrait collage: on narrow screens the subject should
+       stay in frame, so bias the crop upward and drop the drift */
+    .home .hero__bg-media img {
+        object-position: center 30%;
+        animation: none;
+        transform: scale(1.02);
+    }
+
+    .home .hero {
+        padding-block: 5.5rem clamp(4rem, 8vh, 6rem);
+    }
+
+    .home .hero__lead {
+        max-width: 34ch;
+        font-size: 0.95rem;
+    }
+
+    .home .hero__actions {
+        flex-direction: column;
+        width: 100%;
+        max-width: 20rem;
+    }
+
+    .home .cta,
+    .home .ghost {
+        justify-content: center;
+        width: 100%;
+    }
 }
 
+@media (prefers-reduced-motion: reduce) {
+    .home .hero__bg-media img {
+        animation: none;
+        transform: none;
+    }
+}

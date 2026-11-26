@@ -23,10 +23,9 @@
       {{- end }}
     </nav>
 
-    {{- /* the ONE place ascii.rest is used: decorative, no semantic weight */}}
-    <div class="outro__ascii" aria-hidden="true">
-      <ascii-art piece="big-text" options='{"text":"{{ $outro.asciiWord }}"}'></ascii-art>
-      <noscript><span class="outro__ascii-fallback">{{ $outro.asciiWord }}</span></noscript>
-    </div>
+    {{- /* Closing wordmark. Previously an ascii.rest embed; replaced by real
+           type so the page has no third-party dependency and the glyphs stay
+           crisp at any size. Decorative only — never the page heading. */}}
+    <div class="outro__mark" aria-hidden="true">{{ $outro.asciiWord }}</div>
   </div>
 </section>

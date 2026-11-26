@@ -45,8 +45,20 @@ function unlockScroll() {
 function initStuckHeader() {
   const header = document.getElementById('profileHeader');
   if (!header) return;
-  const apply = () => header.classList.toggle('is-stuck', window.scrollY > 24);
+
+  /* Only pages whose first section is the photographic hero need the light
+     palette; everywhere else the bar follows the page theme. */
+  const hero = document.querySelector('.hero__bg');
+  const heroH = () => (hero ? hero.getBoundingClientRect().height - 64 : 0);
+
+  const apply = () => {
+    const y = window.scrollY;
+    header.classList.toggle('is-stuck', y > 24);
+    if (hero) header.classList.toggle('is-on-photo', y < heroH());
+  };
+
   window.addEventListener('scroll', apply, { passive: true });
+  window.addEventListener('resize', apply, { passive: true });
   apply();
 }
 
