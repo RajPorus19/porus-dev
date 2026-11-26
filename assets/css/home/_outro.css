@@ -8,15 +8,6 @@
     text-align: center;
 }
 
-/* the shared .section__label only draws a trailing hairline; the outro adds a
-   matching leading one so the label sits centred between two rules */
-.home .outro .section__label::before {
-    content: "";
-    flex: 1;
-    height: 1px;
-    background: var(--hairline);
-}
-
 .home .outro__lead {
     font-family: "Alata", sans-serif;
     font-size: var(--type-display);

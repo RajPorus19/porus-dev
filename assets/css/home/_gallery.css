@@ -91,10 +91,18 @@
     font-size: max(2.8vw, 3.8svh);
 }
 
-/* keep the section's content above the ascii background */
-.home .gallery .shell {
-    position: relative;
+/* same cursor veil as the hero. z-index 1 sits over the matrix (0) and
+   under the band and cards, which share this level but come later. */
+.home .gallery__glow {
+    position: absolute;
+    inset: 0;
     z-index: 1;
+    pointer-events: none;
+    background:
+        radial-gradient(40rem 40rem at var(--mx, 50%) var(--my, 45%),
+            color-mix(in srgb, var(--surface) 93%, var(--accent) 5%) 0%,
+            color-mix(in srgb, var(--surface) 72%, transparent) 45%,
+            color-mix(in srgb, var(--surface) 28%, transparent) 100%);
 }
 
 .home .gallery__viewport {
@@ -182,23 +190,6 @@
     color: var(--ink-muted);
 }
 
-/* --- progress -------------------------------------------------------- */
-.home .gallery__progress {
-    margin-top: var(--space-6);
-    height: 2px;
-    background: var(--hairline);
-    position: relative;
-    overflow: clip;
-}
-
-.home .gallery__progress-fill {
-    height: 100%;
-    width: 100%;
-    background: var(--accent);
-    transform: scaleX(0);
-    transform-origin: left center;
-}
-
 /* --- mobile fallback ------------------------------------------------- */
 @media (max-width: 1023px) {
     .gallery__track {
@@ -209,10 +200,6 @@
 
     .card {
       width: 100%;
-    }
-
-    .gallery__progress {
-      display: none;
     }
 }
 

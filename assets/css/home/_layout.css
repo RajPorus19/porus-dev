@@ -16,25 +16,6 @@
     padding-block: 0;
 }
 
-.home .section__label {
-    font-family: ui-monospace, "SFMono-Regular", Menlo, monospace;
-    font-size: var(--type-mono);
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--ink-muted);
-    display: flex;
-    align-items: center;
-    gap: var(--space-3);
-    margin-bottom: var(--space-6);
-}
-
-.home .section__label::after {
-    content: "";
-    flex: 1;
-    height: 1px;
-    background: var(--hairline);
-}
-
 .home .figure {
     display: grid;
     gap: var(--space-5);

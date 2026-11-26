@@ -5,6 +5,7 @@
   <div class="gallery__bg" aria-hidden="true">
     <ascii-art piece="matrix-rain"></ascii-art>
   </div>
+  <div class="gallery__glow" data-gallery-glow aria-hidden="true"></div>
   <p class="gallery__band">
     <ascii-art piece="scramble" options='{"phrases":[{{ $gallery.label | jsonify }}]}'></ascii-art>
   </p>
@@ -32,12 +33,6 @@
           </div>
         </article>
       {{- end }}
-    </div>
-  </div>
-
-  <div class="shell">
-    <div class="gallery__progress" aria-hidden="true">
-      <div class="gallery__progress-fill" data-gallery-progress></div>
     </div>
   </div>
 </section>
