@@ -58,7 +58,7 @@ languages:
           download: false
           newPage: false
       gallery:
-        label: "les projets récents"
+        label: "Les projets récents"
       marquee:
         label: "Technologies et domaines"
         items:
@@ -148,7 +148,7 @@ languages:
           download: false
           newPage: false
       gallery:
-        label: "recent projects"
+        label: "Recent projects"
       marquee:
         label: "Technologies and fields"
         items:

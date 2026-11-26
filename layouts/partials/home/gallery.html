@@ -5,7 +5,9 @@
   <div class="gallery__bg" aria-hidden="true">
     <ascii-art piece="matrix-rain"></ascii-art>
   </div>
-  <p class="gallery__band"><span>{{ $gallery.label }}</span></p>
+  <p class="gallery__band">
+    <ascii-art piece="scramble" options='{"phrases":[{{ $gallery.label | jsonify }}]}'></ascii-art>
+  </p>
 
   <div class="gallery__viewport">
     <div class="gallery__track" data-gallery-track>
