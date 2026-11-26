@@ -1,0 +1,70 @@
+/* ==========================================================================
+ _preloader.css — the signature moment.
+ .preloader            full-screen overlay
+ .preloader__count     the 000 -> 100 counter
+ .preloader__mark      the wordmark that will FLIP into the navbar
+ .is-done              set by JS, reveals + releases scroll
+ ========================================================================== */
+
+.home .preloader {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-preload);
+    display: grid;
+    place-items: center;
+    background: var(--surface);
+    color: var(--ink);
+}
+
+.home .preloader__count {
+    font-family: "Alata", sans-serif;
+    font-size: var(--type-mega);
+    line-height: 0.82;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.05em;
+    color: var(--accent);
+    will-change: transform;
+}
+
+.home .preloader__mark {
+    font-family: "Alata", sans-serif;
+    font-size: var(--type-display);
+    letter-spacing: -0.03em;
+    position: absolute;
+    bottom: var(--space-7);
+    transform-origin: left center;
+    will-change: transform;
+}
+
+.home .preloader__bar {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left center;
+}
+
+/* two panels used for the split reveal */
+.home .preloader__panel {
+    position: absolute;
+    inset-inline: 0;
+    height: 50%;
+    background: var(--surface);
+    will-change: transform;
+}
+
+.preloader__panel--top    { top: 0; }
+.preloader__panel--bottom { bottom: 0; }
+
+/* no-JS / reduced motion: the overlay never exists visually */
+.home .preloader.is-idle {
+    display: none;
+}
+
+.home .preloader.is-done {
+    pointer-events: none;
+}
+

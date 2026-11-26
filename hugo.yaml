@@ -28,16 +28,49 @@ languages:
         enable: true
         image: "/images/avatar.webp"
         roundImage: true
-        intro: "Salut, je suis"
+        intro: "Disponible pour collaborer"
         title: "Porus 👋"
         subtitle: "Dev full-stack • Curiosité infinie"
-        content: "Dev curieux qui aime build, explorer et déconstruire des trucs."
+        content: "Je construis, je démonte et je comprends. Du back qui tient la charge aux interfaces qui respirent — stack agnostique, curiosité sans limite."
+        headline:
+          - "Porus"
+        rotating:
+          - "Développeur full-stack"
+          - "Curieux de tout"
+          - "Constructeur"
+        scrollCue: "Scroll"
         button:
           enable: true
           name: "Voir mes projets"
           url: "/projects"
           download: false
           newPage: false
+        button2:
+          enable: true
+          name: "Me contacter"
+          url: "#contact"
+          download: false
+          newPage: false
+      gallery:
+        label: "Projets sélectionnés"
+      marquee:
+        label: "Technologies et domaines"
+        items:
+          - "Python"
+          - "FastAPI"
+          - "Docker"
+          - "Linux"
+          - "API REST"
+          - "Automatisation"
+          - "Self-hosting"
+          - "Front-end"
+          - "Réseaux"
+      outro:
+        label: "Contact"
+        headline: "On construit quelque chose ?"
+        email: "rajporus19@gmail.com"
+        content: "Un projet, un défi technique, ou juste une discussion — ma boîte reste ouverte."
+        asciiWord: "Porus"
       projects:
         enable: true
         title: "🚀 Projets récents"
@@ -79,16 +112,49 @@ languages:
         enable: true
         image: "/images/avatar.webp"
         roundImage: true
-        intro: "Hi, I'm"
+        intro: "Open to collaborate"
         title: "Porus 👋"
         subtitle: "Full-stack dev • Infinite curiosity"
-        content: "Curious dev who loves to build, explore and break things down."
+        content: "I build it, take it apart, then understand it. From backends that hold up under load to interfaces that breathe — stack agnostic, curiosity without limit."
+        headline:
+          - "Porus"
+        rotating:
+          - "Full-stack developer"
+          - "Curious about everything"
+          - "Builder"
+        scrollCue: "Scroll"
         button:
           enable: true
           name: "See my projects"
           url: "/en/projects"
           download: false
           newPage: false
+        button2:
+          enable: true
+          name: "Get in touch"
+          url: "#contact"
+          download: false
+          newPage: false
+      gallery:
+        label: "Selected projects"
+      marquee:
+        label: "Technologies and fields"
+        items:
+          - "Python"
+          - "FastAPI"
+          - "Docker"
+          - "Linux"
+          - "REST API"
+          - "Automation"
+          - "Self-hosting"
+          - "Front-end"
+          - "Networking"
+      outro:
+        label: "Contact"
+        headline: "Shall we build something?"
+        email: "rajporus19@gmail.com"
+        content: "A project, a technical challenge, or just a chat — my inbox stays open."
+        asciiWord: "Porus"
       projects:
         enable: true
         title: "🚀 Recent projects"

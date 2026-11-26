@@ -1,0 +1,45 @@
+{{ define "head" }}
+  <meta name="description" content="{{ .Site.Params.description }}">
+  {{- /* concat in cascade order; Hugo resolves @layer priority across the bundle */}}
+  {{- $files := slice
+        "css/home/_tokens.css"
+        "css/home/_base.css"
+        "css/home/_utils.css"
+        "css/home/_layout.css"
+        "css/home/_preloader.css"
+        "css/home/_hero.css"
+        "css/home/_marquee.css"
+        "css/home/_gallery.css"
+        "css/home/_outro.css"
+        "css/home/_cursor.css" }}
+  {{- $bundle := slice }}
+  {{- range $files }}
+    {{- with resources.Get . }}{{ $bundle = $bundle | append . }}{{ end }}
+  {{- end }}
+  {{- $css := $bundle | resources.Concat "css/home.css" | minify | fingerprint }}
+  <link rel="stylesheet" href="{{ $css.RelPermalink }}" integrity="{{ $css.Data.Integrity }}">
+{{ end }}
+
+{{ define "title" }}{{ .Site.Title }}{{ end }}
+
+{{ define "main" }}
+  <div class="home">
+    {{- partial "home/preloader.html" . -}}
+
+    <main>
+      {{- partial "home/hero.html" . -}}
+      {{- partial "home/marquee.html" . -}}
+      {{- partial "home/gallery.html" . -}}
+      {{- partial "home/outro.html" . -}}
+    </main>
+
+    <div class="cursor" data-cursor-root aria-hidden="true">
+      <span class="cursor__dot"></span>
+      <span class="cursor__ring"></span>
+    </div>
+  </div>
+
+  {{- $opts := dict "targetPath" "js/home.js" "minify" (not hugo.IsServer) "target" "es2020" "format" "esm" }}
+  {{- $js := resources.Get "js/home/index.js" | js.Build $opts | fingerprint }}
+  <script type="module" src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}"></script>
+{{ end }}

@@ -1,0 +1,47 @@
+{{- $hero := .Site.Language.Params.hero | default .Site.Params.hero -}}
+<section class="hero" id="hero">
+  <canvas class="hero__canvas" data-hero-canvas aria-hidden="true"></canvas>
+
+  <div class="shell">
+    <p class="hero__intro" data-hero-fade>
+      {{- with $hero.intro }}
+        <span class="hero__dot" aria-hidden="true"></span>
+        <span>{{ . }}</span>
+      {{- end }}
+    </p>
+
+    <h1 class="hero__title">
+      <span class="u-sr-only">{{ $hero.title }}</span>
+      {{- range $i, $line := $hero.headline }}
+        <span class="hero__line" aria-hidden="true">
+          <span class="hero__line-inner" data-hero-line>{{ $line }}</span>
+        </span>
+      {{- end }}
+    </h1>
+
+    <p class="hero__tagline" data-hero-tagline aria-live="off">
+      {{- range $i, $word := $hero.rotating }}
+        <span class="hero__tagline-item{{ if ne $i 0 }} u-sr-only{{ end }}">{{ $word }}</span>
+      {{- end }}
+    </p>
+
+    <p class="hero__lead u-balance" data-hero-fade>{{ $hero.content | markdownify }}</p>
+
+    <div class="hero__actions" data-hero-fade>
+      {{- with $hero.button }}
+        <a class="cta" href="{{ .url }}" data-magnetic data-cursor="link">
+          {{ .name }}
+          <span class="cta__arrow" aria-hidden="true">&#8594;</span>
+        </a>
+      {{- end }}
+      {{- with $hero.button2 }}
+        <a class="ghost" href="{{ .url }}" data-cursor="link">{{ .name }}</a>
+      {{- end }}
+    </div>
+  </div>
+
+  <p class="hero__cue" data-hero-fade aria-hidden="true">
+    <span class="hero__cue-line"></span>
+    {{ $hero.scrollCue }}
+  </p>
+</section>

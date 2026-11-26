@@ -1,0 +1,51 @@
+/* ==========================================================================
+ _marquee.css — velocity-reactive ticker.
+ Two rows, opposite directions, one solid one outlined.
+ ========================================================================== */
+
+.home .marquee {
+    position: relative;
+    padding-block: var(--space-5);
+    border-block: 1px solid var(--hairline);
+    overflow: clip;
+    user-select: none;
+}
+
+.home .marquee__row {
+    display: flex;
+    gap: var(--space-6);
+    width: max-content;
+    will-change: transform;
+}
+
+.home .marquee__row + .marquee__row {
+    margin-top: var(--space-2);
+}
+
+.home .marquee__track {
+    display: flex;
+    align-items: center;
+    gap: var(--space-6);
+    flex: none;
+}
+
+.home .marquee__item {
+    font-family: "Alata", sans-serif;
+    font-size: clamp(1.5rem, 3.4vw, 3rem);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+    color: var(--ink);
+}
+
+.home .marquee__item.is-outline {
+    color: transparent;
+    -webkit-text-stroke: 1px var(--ink-muted);
+}
+
+.home .marquee__sep {
+    font-size: clamp(1rem, 2vw, 1.75rem);
+    color: var(--accent);
+    flex: none;
+}
+

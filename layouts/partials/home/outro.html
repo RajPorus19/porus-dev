@@ -1,0 +1,33 @@
+{{- $outro := .Site.Language.Params.outro | default .Site.Params.outro -}}
+<section class="section outro" id="contact">
+  <div class="shell">
+    <p class="section__label">{{ $outro.label }}</p>
+
+    <h2 class="outro__lead" data-outro-lead data-text="{{ $outro.headline }}">{{ $outro.headline }}</h2>
+
+    <p>
+      <a class="outro__mail" href="mailto:{{ $outro.email }}" data-cursor="link" data-magnetic>{{ $outro.email }}</a>
+    </p>
+
+    <p class="outro__lead u-muted" style="font-size: var(--type-body); max-width: 52ch; margin-top: var(--space-6);">
+      {{ $outro.content }}
+    </p>
+
+    <nav class="outro__links">
+      {{- with .Site.Params.socialNetworks.github }}<a href="{{ . }}" data-cursor="link">GitHub</a>{{ end }}
+      {{- with .Site.Params.socialNetworks.linkedin }}<a href="{{ . }}" data-cursor="link">LinkedIn</a>{{ end }}
+      {{- with .Site.Params.socialNetworks.twitter }}<a href="{{ . }}" data-cursor="link">X</a>{{ end }}
+      {{- range .AllTranslations }}
+        {{- if ne .Lang $.Language.Lang }}
+          <a href="{{ .RelPermalink }}" hreflang="{{ .Lang }}" data-cursor="link">{{ .Language.LanguageName }}</a>
+        {{- end }}
+      {{- end }}
+    </nav>
+
+    {{- /* the ONE place ascii.rest is used: decorative, no semantic weight */}}
+    <div class="outro__ascii" aria-hidden="true">
+      <ascii-art piece="big-text" options='{"text":"{{ $outro.asciiWord }}"}'></ascii-art>
+      <noscript><span class="outro__ascii-fallback">{{ $outro.asciiWord }}</span></noscript>
+    </div>
+  </div>
+</section>

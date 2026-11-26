@@ -1,0 +1,62 @@
+/* ==========================================================================
+ _base.css — reset + element defaults for the home page only.
+ Scoped under .home so nothing leaks into /projects.
+ ========================================================================== */
+
+.home *,
+.home *::before,
+.home *::after {
+    box-sizing: border-box;
+}
+
+.home {
+    background: var(--surface);
+    color: var(--ink);
+    font-family: "Lora", serif;
+    font-size: var(--type-body);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+}
+
+.home h1,
+.home h2,
+.home h3 {
+    font-family: "Alata", sans-serif;
+    font-weight: 400;
+    line-height: 1.02;
+    letter-spacing: -0.025em;
+    margin: 0;
+}
+
+.home p {
+    margin: 0;
+}
+
+.home a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.home img {
+    max-width: 100%;
+    display: block;
+}
+
+.home button {
+    font: inherit;
+    color: inherit;
+    background: none;
+    border: 0;
+    cursor: pointer;
+}
+
+.home ::selection {
+    background: var(--accent);
+    color: #fff;
+}
+
+/* the JS-driven preloader must not flash before boot */
+.home.has-preloader {
+    overflow: hidden;
+}
+

@@ -1,0 +1,40 @@
+{{- $gallery := .Site.Language.Params.gallery | default .Site.Params.gallery -}}
+{{- $projects := where .Site.RegularPages "Section" "projects" -}}
+{{- $projects = where $projects "Params.showInHome" true -}}
+<section class="section gallery" id="projects">
+  <div class="shell">
+    <p class="section__label">{{ $gallery.label }}</p>
+  </div>
+
+  <div class="gallery__viewport">
+    <div class="gallery__track" data-gallery-track>
+      {{- range $i, $p := $projects }}
+        <article class="card" data-gallery-card>
+          {{- with $p.Params.image }}
+            <div class="card__media">
+              <img class="card__img" src="{{ . | relURL }}" alt="" loading="lazy" data-card-img>
+            </div>
+          {{- end }}
+          <div class="card__body">
+            <span class="card__index">{{ printf "%02d" (add $i 1) }}</span>
+            <h2 class="card__title">
+              <a href="{{ $p.RelPermalink }}" data-cursor="link">{{ $p.Title }}</a>
+            </h2>
+            <p class="card__desc">{{ $p.Params.description }}</p>
+            {{- with $p.Params.badges }}
+              <div class="card__tags">
+                {{- range . }}<span class="tag">{{ . }}</span>{{ end }}
+              </div>
+            {{- end }}
+          </div>
+        </article>
+      {{- end }}
+    </div>
+  </div>
+
+  <div class="shell">
+    <div class="gallery__progress" aria-hidden="true">
+      <div class="gallery__progress-fill" data-gallery-progress></div>
+    </div>
+  </div>
+</section>

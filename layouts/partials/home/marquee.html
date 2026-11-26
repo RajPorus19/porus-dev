@@ -1,0 +1,34 @@
+{{- $marquee := .Site.Language.Params.marquee | default .Site.Params.marquee -}}
+<section class="marquee" aria-label="{{ $marquee.label }}">
+  {{- /* row 1: solid, moves left */}}
+  <div class="marquee__row" data-marquee-row>
+    <div class="marquee__track" data-marquee-track>
+      {{- range $marquee.items }}
+        <span class="marquee__item">{{ . }}</span>
+        <span class="marquee__sep" aria-hidden="true">&#10022;</span>
+      {{- end }}
+    </div>
+    <div class="marquee__track" aria-hidden="true" data-marquee-clone>
+      {{- range $marquee.items }}
+        <span class="marquee__item">{{ . }}</span>
+        <span class="marquee__sep">&#10022;</span>
+      {{- end }}
+    </div>
+  </div>
+
+  {{- /* row 2: outlined, moves right */}}
+  <div class="marquee__row" data-marquee-row data-marquee-reverse>
+    <div class="marquee__track" data-marquee-track aria-hidden="true">
+      {{- range $marquee.items }}
+        <span class="marquee__item is-outline">{{ . }}</span>
+        <span class="marquee__sep" aria-hidden="true">&#10022;</span>
+      {{- end }}
+    </div>
+    <div class="marquee__track" aria-hidden="true" data-marquee-clone>
+      {{- range $marquee.items }}
+        <span class="marquee__item is-outline">{{ . }}</span>
+        <span class="marquee__sep">&#10022;</span>
+      {{- end }}
+    </div>
+  </div>
+</section>

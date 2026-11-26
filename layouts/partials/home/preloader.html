@@ -1,0 +1,10 @@
+{{/* Preloader: plays once per session, never traps content.
+     Everything is inert until JS adds .is-live. */}}
+<div class="preloader is-idle" data-preloader aria-hidden="true">
+  <div class="preloader__panel preloader__panel--top" data-preloader-panel></div>
+  <div class="preloader__panel preloader__panel--bottom" data-preloader-panel></div>
+
+  <span class="preloader__mark" data-preloader-mark>{{ .Site.Params.navbar.brandName }}</span>
+  <span class="preloader__count" data-preloader-count>000</span>
+  <span class="preloader__bar" data-preloader-bar></span>
+</div>

@@ -1,0 +1,57 @@
+/* ==========================================================================
+ _utils.css — one class, one intent. Never extended, never contextual.
+ If a rule needs a second declaration to make sense, it is not a util.
+ ========================================================================== */
+
+/* colour: single declaration each */
+.u-accent   { color: var(--accent); }
+.u-muted    { color: var(--ink-muted); }
+.u-inherit  { color: inherit; }
+
+/* text */
+.u-mono     { font-family: ui-monospace, "SFMono-Regular", Menlo, monospace; }
+.u-upper    { text-transform: uppercase; }
+.u-tight    { letter-spacing: -0.03em; }
+.u-wide     { letter-spacing: 0.12em; }
+.u-balance  { text-wrap: balance; }
+
+/* flow: restore vertical rhythm lost by the reset */
+.u-flow > * + * { margin-top: var(--space-4); }
+.u-flow-l > * + * { margin-top: var(--space-6); }
+
+/* accessibility */
+.home :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+}
+
+/* The navbar lives in the theme header, outside .home, so it needs its own
+   focus ring. Scoped to :focus-visible only — mouse users see no change. */
+#profileHeader :focus-visible {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
+.home a:focus-visible,
+.home button:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+}
+
+.u-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+/* clipping used by every masked reveal */
+.u-clip { overflow: hidden; }
+
+/* a line/char produced by the JS splitter keeps its own box */
+.u-split-line { display: block; overflow: hidden; }
+
