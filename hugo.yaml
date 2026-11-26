@@ -79,7 +79,7 @@ languages:
         asciiWord: "Porus"
       projects:
         enable: true
-        title: "🚀 Projets récents"
+        title: "Projets récents"
         items: []
       contact:
         enable: true
@@ -169,7 +169,7 @@ languages:
         asciiWord: "Porus"
       projects:
         enable: true
-        title: "🚀 Recent projects"
+        title: "Recent projects"
         items: []
       contact:
         enable: true

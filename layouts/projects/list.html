@@ -1,176 +1,130 @@
 {{ define "head" }}
-<meta name="description" content="{{ .Title }} of {{ .Site.Title }}">
-<link rel="stylesheet" href="{{ (printf "%scss/projects.css" (.Site.Params.staticPath | default "")) | relURL }}" media="all">
-<link rel="stylesheet" href="{{ (printf "%scss/list.css" (.Site.Params.staticPath | default "")) | relURL }}" media="all">
-<script defer src="{{ (printf "%sfontawesome-6/all-6.4.2.js" (.Site.Params.staticPath | default "")) | relURL }}"></script>
+<meta name="description" content="{{ .Description | default .Title }}">
+{{- $css := resources.Get "css/work/_page.css" | minify | fingerprint }}
+<link rel="stylesheet" href="{{ $css.RelPermalink }}" integrity="{{ $css.Data.Integrity }}">
+<script type="module" src="https://ascii.rest/ascii.js"></script>
 {{ end }}
 
 {{ define "title" }}
-{{.Title }} | {{ .Site.Title }}
+{{ .Title }} | {{ .Site.Title }}
 {{ end }}
 
 {{ define "main" }}
-<div class="container pt-5" id="projects">
-    <h2 class="text-center pb-2">{{.Title}}</h2>
+{{- $pages := .Pages -}}
+{{- $pager := .Paginator -}}
+{{- $tags := slice -}}
+{{- range $pages -}}
+  {{- range .Params.tags -}}
+    {{- if not (in $tags .) }}{{ $tags = $tags | append . }}{{ end -}}
+  {{- end -}}
+{{- end -}}
+{{- $tags = sort $tags -}}
+<div class="work">
+  <main class="work__main">
+    <header class="work__header">
+      <p class="work__count">{{ printf "%02d" (len $pages) }}</p>
+      <div class="work__mark">
+        <div class="work__flow" aria-hidden="true">
+          <ascii-art piece="flow-field"></ascii-art>
+        </div>
+        <h1 class="work__title">{{ .Title }}</h1>
+      </div>
+      {{- with .Description }}
+      <p class="work__lead">{{ . }}</p>
+      {{- end }}
+    </header>
 
-    <!-- Search + Sort + Filter Bar -->
-    <div class="row mb-4 align-items-center">
-        <div class="col-md-4 mb-2 mb-md-0">
-            <input type="text" id="projectSearch" class="form-control" placeholder="{{ if eq .Site.Language.Lang "en" }}🔍 Search projects...{{ else }}🔍 Rechercher un projet...{{ end }}" onkeyup="filterProjects()">
+    <div class="work__toolbar">
+      <label class="work__field">
+        <span class="work__label">{{ i18n "work_search" }}</span>
+        <input class="work__input" type="search" data-work-search placeholder="{{ i18n "work_search_placeholder" }}" autocomplete="off">
+      </label>
+      <label class="work__field work__field--sort">
+        <span class="work__label">{{ i18n "work_sort" }}</span>
+        <select class="work__select" data-work-sort>
+          <option value="date-desc">{{ i18n "work_sort_newest" }}</option>
+          <option value="date-asc">{{ i18n "work_sort_oldest" }}</option>
+          <option value="name-asc">{{ i18n "work_sort_az" }}</option>
+          <option value="name-desc">{{ i18n "work_sort_za" }}</option>
+        </select>
+      </label>
+      {{- with $tags }}
+      <div class="work__tags" role="group" aria-label="{{ i18n "work_tags" }}">
+        {{- range . }}
+        <button class="work__tag" type="button" data-work-tag data-tag="{{ . }}" aria-pressed="false">{{ . }}</button>
+        {{- end }}
+      </div>
+      {{- end }}
+    </div>
+
+    <div class="work__grid" data-work-grid>
+      {{- $offset := mul (sub $pager.PageNumber 1) $pager.PagerSize -}}
+      {{- range $i, $p := $pager.Pages }}
+      <article class="work__card" data-work-card
+               data-title="{{ $p.Title | lower }}"
+               data-search="{{ printf "%s %s" $p.Title ($p.Params.description | default "") | lower }}"
+               data-tags="{{ delimit ($p.Params.tags | default slice) "," }}"
+               data-date="{{ $p.Date.Unix }}">
+        <div class="work__media">
+          <img class="work__img" src="{{ $p.Params.image | default "/images/project-placeholder.svg" | relURL }}" alt="" loading="lazy">
         </div>
-        <div class="col-md-3 mb-2 mb-md-0">
-            <select id="sortProjects" class="form-select" onchange="sortProjects()">
-                {{ if eq .Site.Language.Lang "en" }}
-                <option value="date-desc">📅 Newest</option>
-                <option value="date-asc">📅 Oldest</option>
-                {{ else }}
-                <option value="date-desc">📅 Plus récent</option>
-                <option value="date-asc">📅 Plus ancien</option>
-                {{ end }}
-                <option value="name-asc">📝 A-Z</option>
-                <option value="name-desc">📝 Z-A</option>
-            </select>
-        </div>
-        <div class="col-md-5 mb-2 mb-md-0" id="tagFilters">
-            <div class="d-flex flex-wrap gap-1" id="tagList">
-                {{ $tags := slice }}
-                {{ range .Pages }}
-                    {{ range .Params.tags }}
-                        {{ if not (in $tags .) }}
-                            {{ $tags = $tags | append . }}
-                        {{ end }}
-                    {{ end }}
-                {{ end }}
-                {{ range $tags }}
-                    <span class="badge tag-filter" data-tag="{{ . }}" onclick="toggleTag('{{ . }}')"
-                          style="cursor:pointer; background:var(--secondary-background-color); color:var(--text-color); padding:6px 12px; font-size:0.85rem; border:1px solid var(--primary-color); border-radius:20px; transition:all 0.2s;">
-                        {{ . }}
-                    </span>
-                {{ end }}
+        <div class="work__body">
+          <span class="work__index">{{ printf "%02d" (add $offset (add $i 1)) }}</span>
+          <h2 class="work__name">
+            <a class="work__name-link" href="{{ $p.RelPermalink }}">{{ $p.Title }}</a>
+          </h2>
+          {{- with $p.Params.description }}
+          <p class="work__desc">{{ . }}</p>
+          {{- end }}
+          {{- with $p.Params.badges }}
+          <div class="work__badges">
+            {{- range . }}<span class="work__badge">{{ . }}</span>{{ end }}
+          </div>
+          {{- end }}
+          <div class="work__meta">
+            <time class="work__date" datetime="{{ $p.Date.Format "2006-01-02" }}">{{ $p.Date.Format "Jan 2006" }}</time>
+            {{- with $p.Params.links }}
+            <div class="work__links">
+              {{- range . }}
+                {{- $kind := "site" -}}
+                {{- $label := i18n "work_link_site" -}}
+                {{- if in .icon "github" -}}
+                  {{- $kind = "code" -}}
+                  {{- $label = i18n "work_link_code" -}}
+                {{- end }}
+              <a class="work__ext" href="{{ .url }}" target="_blank" rel="noopener noreferrer">
+                {{- if eq $kind "code" }}
+                <svg class="work__ext-icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <path fill="currentColor" d="M12 2C6.48 2 2 6.58 2 12.26c0 4.52 2.87 8.35 6.84 9.7.5.1.68-.22.68-.48 0-.24-.01-.87-.01-1.7-2.78.62-3.37-1.37-3.37-1.37-.45-1.18-1.11-1.5-1.11-1.5-.91-.64.07-.63.07-.63 1 .07 1.53 1.05 1.53 1.05.9 1.57 2.36 1.12 2.94.86.09-.67.35-1.12.63-1.38-2.22-.26-4.55-1.14-4.55-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.27 2.75 1.05a9.28 9.28 0 0 1 5.01 0c1.91-1.32 2.75-1.05 2.75-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.8-4.57 5.06.36.32.68.94.68 1.9 0 1.37-.01 2.48-.01 2.82 0 .26.18.59.69.48A10.04 10.04 0 0 0 22 12.26C22 6.58 17.52 2 12 2z"/>
+                </svg>
+                {{- else }}
+                <svg class="work__ext-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+                  <circle cx="12" cy="12" r="9"></circle>
+                  <path d="M3 12h18"></path>
+                  <path d="M12 3c2.6 2.7 3.9 5.8 3.9 9s-1.3 6.3-3.9 9c-2.6-2.7-3.9-5.8-3.9-9s1.3-6.3 3.9-9z"></path>
+                </svg>
+                {{- end }}
+                <span>{{ $label }}</span>
+              </a>
+              {{- end }}
             </div>
+            {{- end }}
+          </div>
         </div>
+      </article>
+      {{- end }}
     </div>
 
-    <div class="row" id="projectGrid">
-        {{ range .Pages.ByDate.Reverse }}
-        <div class="col-lg-4 col-md-6 my-3 project-card"
-             data-title="{{ .Title | lower }}"
-             data-tags='{{ delimit (.Params.tags | default slice) "," }}'
-             data-date="{{ .Date.Unix }}">
-            <div class="card my-3 h-100" title="{{ .Title }}">
-                <div class="card-head">
-                    <img class="card-img-top" src="{{ .Params.image | default "/images/project-placeholder.svg" }}" alt="{{ .Title }}" style="height:200px; width:100%; object-fit:contain; background:var(--secondary-background-color);">
-                </div>
-                <div class="card-body bg-transparent p-3">
-                    <div class="pb-2 bg-transparent">
-                        {{ range .Params.badges }}
-                        <span class="badge" style="background:var(--primary-color); color:white;">{{ . }}</span>
-                        {{ end }}
-                    </div>
-                    <h5 class="card-title bg-transparent" style="font-size:1.05rem; font-weight:600;">{{ .Title | truncate 50 }}</h5>
-                    <div class="card-text bg-transparent secondary-font" style="font-size:0.9rem;">
-                        {{ .Summary | truncate 120 | safeHTML }}
-                    </div>
-                    <small class="text-muted">📅 {{ .Date.Format "Jan 2006" }}</small>
-                </div>
-                <div class="card-footer py-3 bg-transparent border-top-0">
-                    {{ range .Params.links }}
-                    <span class="m-1 mx-2">
-                        <a href="{{ .url }}" target="_blank" style="color:var(--primary-color);">
-                            <i class="{{ .icon }}"></i>
-                        </a>
-                    </span>
-                    {{ end }}
-                    <span class="float-end">
-                        <a class="btn btn-sm" href="{{ .RelPermalink }}" style="border:1px solid var(--primary-color); color:var(--primary-color); border-radius:20px;">
-                            {{ if eq .Site.Language.Lang "en" }}Learn more →{{ else }}En savoir plus →{{ end }}
-                        </a>
-                    </span>
-                </div>
-            </div>
-        </div>
-        {{ end }}
-    </div>
+    <p class="work__empty" data-work-empty {{ if gt (len $pages) 0 }}hidden{{ end }}>{{ i18n "work_empty" }}</p>
 
-    <div class="row justify-content-center">
-        <div class="col-auto m-3">
-            {{template "_internal/pagination.html" . }}
-        </div>
-    </div>
+    {{- if gt $pager.TotalPages 1 }}
+    <nav class="work__pager" aria-label="{{ i18n "work_pages" }}">
+      {{ template "_internal/pagination.html" . }}
+    </nav>
+    {{- end }}
+  </main>
 </div>
-
-<style>
-.tag-filter.active {
-    background: var(--primary-color) !important;
-    color: white !important;
-}
-.tag-filter:hover {
-    background: var(--primary-color) !important;
-    color: white !important;
-    transform: scale(1.05);
-}
-#projectSearch {
-    border: 2px solid var(--secondary-background-color);
-    border-radius: 20px;
-    padding: 10px 16px;
-    font-size: 0.95rem;
-}
-#projectSearch:focus {
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 0.2rem rgba(79, 70, 229, 0.15);
-}
-#sortProjects {
-    border: 2px solid var(--secondary-background-color);
-    border-radius: 20px;
-    padding: 10px 16px;
-}
-</style>
-
-<script>
-let activeTags = new Set();
-
-function filterProjects() {
-    let search = document.getElementById('projectSearch').value.toLowerCase().trim();
-    let cards = document.querySelectorAll('.project-card');
-    cards.forEach(card => {
-        let title = card.dataset.title;
-        let cardTags = card.dataset.tags ? card.dataset.tags.split(',') : [];
-        let matchesSearch = !search || title.includes(search);
-        let matchesTags = activeTags.size === 0 || cardTags.some(t => activeTags.has(t));
-        card.style.display = (matchesSearch && matchesTags) ? '' : 'none';
-    });
-}
-
-function toggleTag(tag) {
-    let el = document.querySelector(`.tag-filter[data-tag="${tag}"]`);
-    if (activeTags.has(tag)) {
-        activeTags.delete(tag);
-        el.classList.remove('active');
-    } else {
-        activeTags.add(tag);
-        el.classList.add('active');
-    }
-    filterProjects();
-}
-
-function sortProjects() {
-    let sort = document.getElementById('sortProjects').value;
-    let grid = document.getElementById('projectGrid');
-    let cards = Array.from(grid.querySelectorAll('.project-card'));
-    cards.sort((a, b) => {
-        let dateA = parseInt(a.dataset.date);
-        let dateB = parseInt(b.dataset.date);
-        let titleA = a.dataset.title;
-        let titleB = b.dataset.title;
-        switch(sort) {
-            case 'date-desc': return dateB - dateA;
-            case 'date-asc': return dateA - dateB;
-            case 'name-asc': return titleA.localeCompare(titleB);
-            case 'name-desc': return titleB.localeCompare(titleA);
-            default: return 0;
-        }
-    });
-    cards.forEach(c => grid.appendChild(c));
-}
-</script>
+{{- $opts := dict "targetPath" "js/work.js" "minify" (not hugo.IsServer) "target" "es2020" "format" "esm" }}
+{{- $js := resources.Get "js/work/index.js" | js.Build $opts | fingerprint }}
+<script type="module" src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}"></script>
 {{ end }}

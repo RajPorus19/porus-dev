@@ -29,3 +29,41 @@ other = "navigate"
 
 [nav_hint_open]
 other = "open"
+
+# Project archive
+
+[work_search]
+other = "Search"
+
+[work_search_placeholder]
+other = "Project name"
+
+[work_sort]
+other = "Order"
+
+[work_sort_newest]
+other = "Newest"
+
+[work_sort_oldest]
+other = "Oldest"
+
+[work_sort_az]
+other = "A–Z"
+
+[work_sort_za]
+other = "Z–A"
+
+[work_tags]
+other = "Tags"
+
+[work_empty]
+other = "No projects match."
+
+[work_link_code]
+other = "Code"
+
+[work_link_site]
+other = "Site"
+
+[work_pages]
+other = "Pages"
