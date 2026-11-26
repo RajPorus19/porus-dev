@@ -6,14 +6,10 @@
          caption stays attached to the image itself. */}}
   <figure class="hero__frame" data-hero-frame>
     <div class="hero__photo" data-hero-photo>
-      <picture>
-        <source media="(max-width: 640px)" srcset="{{ "/images/hero-bg-768.webp" | relURL }}">
-        <source media="(max-width: 1280px)" srcset="{{ "/images/hero-bg-1280.webp" | relURL }}">
-        <img src="{{ "/images/hero-bg-1920.webp" | relURL }}"
-             alt="{{ $hero.photoAlt }}"
-             width="1920" height="1199"
-             fetchpriority="high" decoding="async">
-      </picture>
+      <img src="{{ "/images/new-background-pic.png" | relURL }}"
+           alt="{{ $hero.photoAlt }}"
+           width="3024" height="4032"
+           fetchpriority="high" decoding="async">
       <div class="hero__photo-gloss" aria-hidden="true"></div>
     </div>
     <figcaption class="hero__caption">{{ $hero.photoCaption }}</figcaption>

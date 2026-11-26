@@ -1,10 +1,20 @@
 /* ==========================================================================
- _outro.css — contact handoff + the one ascii.rest use.
- ========================================================================== */
+   _outro.css — contact handoff + the one ascii.rest use.
+   ========================================================================== */
 
 .home .outro {
     padding-block: var(--section-y) var(--space-8);
     border-top: 1px solid var(--hairline);
+    text-align: center;
+}
+
+/* the shared .section__label only draws a trailing hairline; the outro adds a
+   matching leading one so the label sits centred between two rules */
+.home .outro .section__label::before {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--hairline);
 }
 
 .home .outro__lead {
@@ -14,6 +24,7 @@
     letter-spacing: -0.04em;
     max-width: 20ch;
     text-transform: none;
+    margin-inline: auto;
 }
 
 .home .outro__char {
@@ -39,6 +50,7 @@
 .home .outro__links {
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
     gap: var(--space-5);
     margin-top: var(--space-7);
     font-size: var(--type-mono);
@@ -51,17 +63,28 @@
     color: var(--ink);
 }
 
-/* closing wordmark: oversized type, clipped at the baseline */
+/* closing wordmark: an ascii.rest block-letter banner. It draws a fixed 66×8
+   cell grid into a <pre>, so the font-size scales with the viewport to keep
+   the grid inside the shell; a horizontal scrollbar is the last resort on
+   very narrow screens. */
 .home .outro__mark {
     margin-top: var(--space-7);
-    font-family: "Alata", sans-serif;
-    font-size: clamp(5rem, 21vw, 17rem);
-    line-height: 0.78;
-    letter-spacing: -0.05em;
-    text-transform: uppercase;
-    color: transparent;
-    -webkit-text-stroke: 1px color-mix(in srgb, var(--ink) 26%, transparent);
+    display: flex;
+    justify-content: center;
+    color: var(--ink);
     user-select: none;
-    overflow: clip;
 }
 
+.home .outro__mark ascii-art {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+.home .outro__mark ascii-art pre {
+    margin: 0 auto;
+    width: fit-content;
+    font-size: clamp(0.5rem, 1.9vw, 1.1rem);
+    line-height: 1.2;
+    white-space: pre;
+}

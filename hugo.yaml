@@ -45,7 +45,7 @@ languages:
           - "Constructeur"
         scrollCue: "Scroll"
         photoAlt: "Cour intérieure d'un palais aux murs de zellige, un homme debout près de la fontaine, un plafond peint et une façade blanche"
-        photoCaption: "Palais · zellige & plafond peint"
+        photoCaption: "Musée national du Bardo (Algérie)"
         button:
           enable: true
           name: "Voir mes projets"
@@ -136,7 +136,7 @@ languages:
           - "Builder"
         scrollCue: "Scroll"
         photoAlt: "Inner courtyard of a palace with zellige walls, a man standing by the fountain, a painted ceiling and a white facade"
-        photoCaption: "Palace · zellige & painted ceiling"
+        photoCaption: "Bardo National Museum of Prehistory and Ethnography (Algeria)"
         button:
           enable: true
           name: "See my projects"
