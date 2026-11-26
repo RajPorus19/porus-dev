@@ -16,7 +16,6 @@
     <nav class="outro__links">
       {{- with .Site.Params.socialNetworks.github }}<a href="{{ . }}" data-cursor="link">GitHub</a>{{ end }}
       {{- with .Site.Params.socialNetworks.linkedin }}<a href="{{ . }}" data-cursor="link">LinkedIn</a>{{ end }}
-      {{- with .Site.Params.socialNetworks.twitter }}<a href="{{ . }}" data-cursor="link">X</a>{{ end }}
       {{- range .AllTranslations }}
         {{- if ne .Lang $.Language.Lang }}
           <a href="{{ .RelPermalink }}" hreflang="{{ .Lang }}" data-cursor="link">{{ .Language.LanguageName }}</a>

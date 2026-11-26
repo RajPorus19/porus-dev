@@ -1,7 +1,9 @@
 /* ==========================================================================
- _marquee.css — velocity-reactive ticker.
- Two rows, opposite directions, one solid one outlined.
- ========================================================================== */
+   _marquee.css — endless ticker.
+   Two rows travelling in opposite directions. Each row is a hard-height box
+   so the two baselines can never drift, and the wrapper is the only element
+   that receives a skew (the inner track belongs to anime.js).
+   ========================================================================== */
 
 .home .marquee {
     position: relative;
@@ -9,30 +11,38 @@
     border-block: 1px solid var(--hairline);
     overflow: clip;
     user-select: none;
+    display: grid;
+    gap: var(--space-2);
 }
 
 .home .marquee__row {
     display: flex;
-    gap: var(--space-6);
+    flex-wrap: nowrap;
+    align-items: center;
     width: max-content;
+    /* the two tracks must sit flush: no gap here, or the loop shows a seam */
+    gap: 0;
+    transform-origin: center left;
     will-change: transform;
-}
-
-.home .marquee__row + .marquee__row {
-    margin-top: var(--space-2);
 }
 
 .home .marquee__track {
     display: flex;
     align-items: center;
-    gap: var(--space-6);
     flex: none;
+    gap: var(--space-6);
+    /* no will-change: anime.js already promotes this node */
 }
 
+/* One shared line-box for every item so solid and outlined rows line up
+   exactly, regardless of glyph ascenders. */
 .home .marquee__item {
     font-family: "Alata", sans-serif;
     font-size: clamp(1.5rem, 3.4vw, 3rem);
     line-height: 1;
+    height: 1em;
+    display: flex;
+    align-items: center;
     letter-spacing: -0.02em;
     white-space: nowrap;
     color: var(--ink);
@@ -44,8 +54,12 @@
 }
 
 .home .marquee__sep {
+    font-family: "Alata", sans-serif;
     font-size: clamp(1rem, 2vw, 1.75rem);
+    line-height: 1;
+    height: 1em;
+    display: flex;
+    align-items: center;
     color: var(--accent);
     flex: none;
 }
-
