@@ -1,0 +1,31 @@
+# Navigation — keys added for the navbar revamp
+
+[nav_main]
+other = "Main"
+
+[nav_language]
+other = "Language"
+
+[nav_theme]
+other = "Toggle theme"
+
+[nav_menu]
+other = "Menu"
+
+[nav_close]
+other = "Close"
+
+[nav_search]
+other = "Search"
+
+[nav_search_placeholder]
+other = "Projects, sections, contact…"
+
+[nav_search_empty]
+other = "Nothing here."
+
+[nav_hint_nav]
+other = "navigate"
+
+[nav_hint_open]
+other = "open"

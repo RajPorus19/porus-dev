@@ -1,8 +1,9 @@
 {{ define "head" }}
   <meta name="description" content="{{ .Site.Params.description }}">
-  {{- /* concat in cascade order; Hugo resolves @layer priority across the bundle */}}
+  {{- /* Home-only styles. _tokens.css and _nav.css are already in the
+         site-wide nav bundle (head/extensions.html) and are deliberately
+         excluded here to avoid shipping them twice. */}}
   {{- $files := slice
-        "css/home/_tokens.css"
         "css/home/_base.css"
         "css/home/_utils.css"
         "css/home/_layout.css"

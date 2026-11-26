@@ -1,0 +1,49 @@
+{{- /*
+  Search index for the home command palette.
+
+  The theme's index only lists RegularPages, which on this site is 2 projects —
+  too thin for a real search. This index adds the in-page sections and actions
+  so the palette has something useful to find and ranks results sensibly.
+
+  Output: /index.json, consumed by assets/js/home/palette.js
+*/ -}}
+{{- $lang := .Language.Lang -}}
+{{- $items := slice -}}
+
+{{- /* in-page sections */ -}}
+{{- $sections := slice
+      (dict "id" "hero"     "labels" (dict "fr" "Accueil"              "en" "Home"))
+      (dict "id" "projects" "labels" (dict "fr" "Projets sélectionnés" "en" "Selected projects"))
+      (dict "id" "contact"  "labels" (dict "fr" "Contact"              "en" "Contact"))
+-}}
+{{- range $sections -}}
+  {{- $items = $items | append (dict
+        "type" "section"
+        "title" (index .labels $lang)
+        "description" ""
+        "url" (printf "#%s" .id)
+        "text" (index .labels $lang)) -}}
+{{- end -}}
+
+{{- /* content pages: projects, and anything else with a permalink */ -}}
+{{- range .Site.RegularPages -}}
+  {{- $items = $items | append (dict
+        "type" "page"
+        "title" .Title
+        "description" (.Params.description | default "")
+        "url" .RelPermalink
+        "text" (printf "%s %s %s" .Title (.Params.description | default "") (delimit (.Params.badges | default slice) " "))) -}}
+{{- end -}}
+
+{{- /* outbound actions */ -}}
+{{- with .Site.Params.socialNetworks.github -}}
+  {{- $items = $items | append (dict "type" "link" "title" "GitHub" "description" "github.com" "url" . "text" "GitHub code repositories") -}}
+{{- end -}}
+{{- with .Site.Params.socialNetworks.linkedin -}}
+  {{- $items = $items | append (dict "type" "link" "title" "LinkedIn" "description" "linkedin.com" "url" . "text" "LinkedIn profile") -}}
+{{- end -}}
+{{- with (.Site.Language.Params.outro | default .Site.Params.outro).email -}}
+  {{- $items = $items | append (dict "type" "link" "title" (printf "Email — %s" .) "description" "" "url" (printf "mailto:%s" .) "text" (printf "email contact %s" .)) -}}
+{{- end -}}
+
+{{- $items | jsonify -}}

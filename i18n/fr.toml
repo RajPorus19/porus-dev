@@ -1,0 +1,31 @@
+# Navigation — clés ajoutées pour la navbar revamp
+
+[nav_main]
+other = "Principal"
+
+[nav_language]
+other = "Langue"
+
+[nav_theme]
+other = "Basculer le thème"
+
+[nav_menu]
+other = "Menu"
+
+[nav_close]
+other = "Fermer"
+
+[nav_search]
+other = "Rechercher"
+
+[nav_search_placeholder]
+other = "Projets, sections, contact…"
+
+[nav_search_empty]
+other = "Rien par ici."
+
+[nav_hint_nav]
+other = "naviguer"
+
+[nav_hint_open]
+other = "ouvrir"

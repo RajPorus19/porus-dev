@@ -13,11 +13,16 @@ languages:
     contentDir: "content/fr"
     menu:
       main:
-        - identifier: projects
-          name: Projets
+        - identifier: work
+          name: Work
           title: Mes projets
           url: /projects
           weight: 1
+        - identifier: contact
+          name: Contact
+          title: Me contacter
+          url: /#contact
+          weight: 2
     params:
       title: "Porus | Dev curieux"
       description: "Dev full-stack qui construit, explore et apprend. Stack agnostique, curiosité infinie."
@@ -97,11 +102,16 @@ languages:
     contentDir: "content/en"
     menu:
       main:
-        - identifier: projects
-          name: Projects
+        - identifier: work
+          name: Work
           title: My projects
           url: /en/projects
           weight: 1
+        - identifier: contact
+          name: Contact
+          title: Get in touch
+          url: /en/#contact
+          weight: 2
     params:
       title: "Porus | Curious dev"
       description: "Full-stack dev who builds, explores and learns. Stack agnostic, infinite curiosity."
@@ -231,7 +241,8 @@ params:
 
   navbar:
     align: ms-auto
-    disableSearch: false
+    # the theme's inline search input is off; the command palette replaces it
+    disableSearch: true
     stickyNavBar:
       enable: true
       showOnScrollUp: true
@@ -240,9 +251,9 @@ params:
       disableAbout: true
       disableExperience: true
       disableEducation: true
-      disableProjects: false
+      disableProjects: true
       disableAchievements: true
-      disableContact: false
+      disableContact: true
 
   socialNetworks:
     github: https://github.com/RajPorus19

@@ -1,0 +1,151 @@
+{{- /*
+  Header override — replaces themes/hugo-profile/layouts/partials/sections/header.html
+
+  Differences from the theme original:
+  - no search input in the bar; a command-palette trigger button instead
+  - no rocket/globe emoji: inline SVG only
+  - language is a two-state text toggle, not a dropdown
+  - mobile menu is a full-screen overlay built here, not a Bootstrap collapse
+  - section links come from .Site.Menus.main, so wording lives in hugo.yaml
+*/ -}}
+<script>
+    (function () {
+        var stored = localStorage.getItem('pref-theme');
+        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var dark = stored === 'dark' || (stored !== 'light' && prefersDark);
+        if (dark) {
+            document.documentElement.classList.add('dark');
+            document.body.classList.add('dark');
+        }
+    })();
+</script>
+
+<header id="profileHeader" class="nav">
+    <div class="nav__inner">
+        <a class="nav__brand" href="{{ .Site.Home.RelPermalink }}" aria-label="{{ .Site.Params.navbar.brandName | default .Site.Title }}">
+            {{- with .Site.Params.favicon }}
+            <img class="nav__mark" src="{{ . | relURL }}" alt="" width="24" height="24">
+            {{- end }}
+            <span class="nav__wordmark">{{ .Site.Params.navbar.brandName | default .Site.Title }}</span>
+        </a>
+
+        <nav class="nav__links" aria-label="{{ i18n "nav_main" | default "Main" }}">
+            {{- range .Site.Menus.main }}
+                {{- if not .HasChildren }}
+                <a class="nav__link" href="{{ .URL }}" title="{{ .Title }}">{{ .Name }}</a>
+                {{- end }}
+            {{- end }}
+        </nav>
+
+        <div class="nav__actions">
+            <button class="nav__palette" type="button" data-palette-open aria-label="{{ i18n "nav_search" | default "Search" }}">
+                <svg class="nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true">
+                    <circle cx="11" cy="11" r="7"></circle>
+                    <line x1="16.5" y1="16.5" x2="21" y2="21"></line>
+                </svg>
+                <span class="nav__palette-label">{{ i18n "nav_search" | default "Search" }}</span>
+                <kbd class="nav__kbd" aria-hidden="true"><span class="nav__kbd-mod">Ctrl</span>K</kbd>
+            </button>
+
+            {{- if hugo.IsMultilingual }}
+            {{- $translations := .AllTranslations }}
+            {{- if eq (len $translations) 1 }}{{ $translations = site.Home.AllTranslations }}{{ end }}
+            <div class="nav__lang" role="group" aria-label="{{ i18n "nav_language" | default "Language" }}">
+                {{- range $translations }}
+                <a class="nav__lang-opt{{ if eq .Language.Lang $.Language.Lang }} is-current{{ end }}"
+                   href="{{ .RelPermalink }}"
+                   hreflang="{{ .Language.Lang }}"
+                   {{ if eq .Language.Lang $.Language.Lang }}aria-current="true"{{ end }}>{{ upper .Language.Lang }}</a>
+                {{- end }}
+            </div>
+            {{- end }}
+
+            {{- if not (.Site.Params.theme.disableThemeToggle | default false) }}
+            <button id="theme-toggle" class="nav__toggle" type="button" aria-label="{{ i18n "nav_theme" | default "Toggle dark mode" }}">
+                <svg class="nav__icon nav__icon--moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+                <svg class="nav__icon nav__icon--sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true">
+                    <circle cx="12" cy="12" r="4.5"></circle>
+                    <line x1="12" y1="1.5" x2="12" y2="3.5"></line>
+                    <line x1="12" y1="20.5" x2="12" y2="22.5"></line>
+                    <line x1="4.5" y1="4.5" x2="5.9" y2="5.9"></line>
+                    <line x1="18.1" y1="18.1" x2="19.5" y2="19.5"></line>
+                    <line x1="1.5" y1="12" x2="3.5" y2="12"></line>
+                    <line x1="20.5" y1="12" x2="22.5" y2="12"></line>
+                    <line x1="4.5" y1="19.5" x2="5.9" y2="18.1"></line>
+                    <line x1="18.1" y1="5.9" x2="19.5" y2="4.5"></line>
+                </svg>
+            </button>
+            {{- end }}
+
+            <button class="nav__burger" type="button" data-menu-open aria-label="{{ i18n "nav_menu" | default "Menu" }}" aria-expanded="false">
+                <span class="nav__burger-line"></span>
+                <span class="nav__burger-line"></span>
+            </button>
+        </div>
+    </div>
+</header>
+
+{{- /* ---- mobile overlay menu ---- */}}
+<div class="menu" id="mobileMenu" hidden>
+    <div class="menu__head">
+        <span class="menu__label">{{ .Site.Params.navbar.brandName | default .Site.Title }}</span>
+        <button class="menu__close" type="button" data-menu-close aria-label="{{ i18n "nav_close" | default "Close" }}">
+            <svg class="nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true">
+                <line x1="5" y1="5" x2="19" y2="19"></line>
+                <line x1="19" y1="5" x2="5" y2="19"></line>
+            </svg>
+        </button>
+    </div>
+
+    <nav class="menu__list" aria-label="{{ i18n "nav_main" | default "Main" }}">
+        {{- range .Site.Menus.main }}
+        <a class="menu__item" href="{{ .URL }}" data-menu-item>{{ .Name }}</a>
+        {{- end }}
+    </nav>
+
+    <div class="menu__foot">
+        <button class="menu__palette" type="button" data-palette-open>
+            <svg class="nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true">
+                <circle cx="11" cy="11" r="7"></circle>
+                <line x1="16.5" y1="16.5" x2="21" y2="21"></line>
+            </svg>
+            {{ i18n "nav_search" | default "Search" }}
+        </button>
+
+        {{- if hugo.IsMultilingual }}
+        {{- $translations := .AllTranslations }}
+        {{- if eq (len $translations) 1 }}{{ $translations = site.Home.AllTranslations }}{{ end }}
+        <div class="nav__lang">
+            {{- range $translations }}
+            <a class="nav__lang-opt{{ if eq .Language.Lang $.Language.Lang }} is-current{{ end }}"
+               href="{{ .RelPermalink }}" hreflang="{{ .Language.Lang }}">{{ upper .Language.Lang }}</a>
+            {{- end }}
+        </div>
+        {{- end }}
+    </div>
+</div>
+
+{{- /* ---- command palette ---- */}}
+<div class="palette" id="palette" hidden>
+    <div class="palette__backdrop" data-palette-close></div>
+    <div class="palette__panel" role="dialog" aria-modal="true" aria-label="{{ i18n "nav_search" | default "Search" }}">
+        <div class="palette__field">
+            <svg class="nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true">
+                <circle cx="11" cy="11" r="7"></circle>
+                <line x1="16.5" y1="16.5" x2="21" y2="21"></line>
+            </svg>
+            <input class="palette__input" type="text" autocomplete="off" spellcheck="false"
+                   placeholder="{{ i18n "nav_search_placeholder" | default "Search projects, sections…" }}"
+                   aria-label="{{ i18n "nav_search" | default "Search" }}">
+            <button class="palette__esc" type="button" data-palette-close aria-label="{{ i18n "nav_close" | default "Close" }}">Esc</button>
+        </div>
+        <ul class="palette__list" role="listbox"></ul>
+        <p class="palette__empty" hidden>{{ i18n "nav_search_empty" | default "Nothing here." }}</p>
+        <div class="palette__hint">
+            <span><kbd>↑</kbd><kbd>↓</kbd> {{ i18n "nav_hint_nav" | default "navigate" }}</span>
+            <span><kbd>↵</kbd> {{ i18n "nav_hint_open" | default "open" }}</span>
+        </div>
+    </div>
+</div>

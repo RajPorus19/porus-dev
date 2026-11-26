@@ -40,6 +40,8 @@ const boot = async () => {
   if (has('[data-cursor-root]')) {
     loaders.push(import('./cursor.js').then((m) => ['cursor', m.initCursor]));
   }
+  /* nav + palette are site-wide: they boot from assets/js/nav/boot.js on every
+     page, including this one, so they must not also be loaded here. */
 
   const modules = new Map(await Promise.all(loaders));
 
