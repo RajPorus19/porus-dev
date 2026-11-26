@@ -1,17 +1,14 @@
 /* ==========================================================================
-   _hero.css — centred copy, photograph as a background layer.
+   _hero.css — centred copy, full-bleed photograph as the background.
 
    Layering inside .hero (bottom to top):
-     0  .hero__frame   the framed photograph (absolute, lower half)
-     1  .hero__veil    blur / soften pass over the photo only
-     2  .hero__wash    accent bloom, ties the photo to the palette
-     3  .hero__copy    title, tagline, lead, CTAs — centred
-     4  .hero__cue
+     0  .hero__frame   the photograph (full-bleed background)
+     1  .hero__wash    accent bloom, ties the photo to the palette
+     2  .hero__copy    title, tagline, lead, CTAs — centred
+     3  .hero__cue
 
-   The photo is whole: object-fit: contain at its natural 16:10, anchored low
-   so the copy above it never sits on a face. Because it is contained, the
-   "background" is a framed object rather than a full-bleed cover — nothing in
-   the collage gets cropped away.
+   The photo fills the hero edge to edge (object-fit: cover) and recedes on
+   scroll while the copy stays centred over it.
    ========================================================================== */
 
 .home .hero {
@@ -25,18 +22,13 @@
     isolation: isolate;
 }
 
-/* --- photograph (background layer) ---------------------------------------- */
+/* --- photograph (full-bleed background layer) ----------------------------- */
 
 .home .hero__frame {
     position: absolute;
     z-index: 0;
-    /* anchored to the lower-right third so the subject stays clear of the
-       centred copy and its caption has room */
-    left: 50%;
-    bottom: clamp(1rem, 4vh, 3rem);
-    translate: -50% 0;
+    inset: 0;
     margin: 0;
-    width: min(78rem, 92vw);
     transform-origin: 50% 85%;
     /* recede: drift down and shrink a touch as the page moves on */
     transform:
@@ -48,47 +40,16 @@
 }
 
 .home .hero__photo {
-    position: relative;
-    border-radius: 1.1rem;
-    overflow: clip;
-    background: var(--surface-2);
-    padding: 0.5rem;
-    box-shadow:
-        0 1px 0 rgba(255, 255, 255, 0.14) inset,
-        0 0 0 1px color-mix(in srgb, var(--ink) 10%, transparent),
-        0 30px 80px -30px rgba(0, 0, 0, 0.5),
-        0 12px 30px -18px color-mix(in srgb, var(--accent) 55%, transparent);
+    position: absolute;
+    inset: 0;
 }
 
-.home .hero__photo picture {
-    display: block;
-    border-radius: 0.7rem;
-    overflow: clip;
-}
-
-/* contain, never cover: the collage is three panels, cropping it would cut
-   the subject. */
+/* cover, never contain: the photo fills the hero, cropping the overflow */
 .home .hero__photo img {
     display: block;
     width: 100%;
-    height: auto;
-    aspect-ratio: 16 / 10;
-    object-fit: contain;
-    border-radius: 0.7rem;
-}
-
-.home .hero__photo-gloss {
-    position: absolute;
-    inset: 0.5rem;
-    border-radius: 0.7rem;
-    pointer-events: none;
-    background: linear-gradient(
-        118deg,
-        rgba(255, 255, 255, 0.14) 0%,
-        rgba(255, 255, 255, 0.04) 22%,
-        transparent 44%
-    );
-    mix-blend-mode: soft-light;
+    height: 100%;
+    object-fit: cover;
 }
 
 .home .hero__caption {
@@ -119,23 +80,8 @@
     flex: none;
 }
 
-/* --- soften + tint passes -------------------------------------------------
-   .hero__veil only touches the photo area: a downward gradient that lifts the
-   copy area off the image so centred text stays legible without hiding it. */
-.home .hero__veil {
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    pointer-events: none;
-    background: linear-gradient(
-        to bottom,
-        var(--surface) 0%,
-        color-mix(in srgb, var(--surface) 82%, transparent) 26%,
-        color-mix(in srgb, var(--surface) 34%, transparent) 54%,
-        transparent 78%
-    );
-}
-
+/* --- tint pass ------------------------------------------------------------
+   .hero__wash is a soft accent bloom that ties the photo to the palette. */
 .home .hero__wash {
     position: absolute;
     inset: 0;
@@ -285,7 +231,6 @@
 .home .hero__cue {
     position: absolute;
     z-index: 4;
-    /* sits in the strip of page background below the frame, never on it */
     bottom: 0.35rem;
     left: 50%;
     translate: -50% 0;
@@ -316,18 +261,6 @@
         padding-block: 5.5rem 3rem;
     }
 
-    .home .hero__frame {
-        width: 100vw;
-        left: 50%;
-        bottom: 0.5rem;
-        border-radius: 0;
-    }
-
-    .home .hero__photo {
-        border-radius: 0.85rem 0.85rem 0 0;
-        padding: 0.35rem;
-    }
-
     .home .hero__title {
         font-size: clamp(2.75rem, 15vw, 4.5rem);
     }
@@ -345,17 +278,6 @@
 
     .home .hero__cue {
         display: none;
-    }
-
-    /* the veil needs to reach further down on short screens */
-    .home .hero__veil {
-        background: linear-gradient(
-            to bottom,
-            var(--surface) 0%,
-            color-mix(in srgb, var(--surface) 88%, transparent) 34%,
-            color-mix(in srgb, var(--surface) 46%, transparent) 62%,
-            color-mix(in srgb, var(--surface) 12%, transparent) 100%
-        );
     }
 }
 

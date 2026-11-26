@@ -1,22 +1,19 @@
 {{- $hero := .Site.Language.Params.hero | default .Site.Params.hero -}}
 <section class="hero" id="hero">
-  {{- /* ---- the photograph sits behind everything -------------------------
-         It is kept whole (contain, natural 16:10) and anchored to the lower
-         part of the hero, so the copy above it never covers a face. The
-         caption stays attached to the image itself. */}}
+  {{- /* ---- the photograph sits behind everything, full-bleed ---------------
+         It covers the whole hero (object-fit: cover) while the copy stays
+         centred over it. The caption is attached to the image itself. */}}
   <figure class="hero__frame" data-hero-frame>
     <div class="hero__photo" data-hero-photo>
       <img src="{{ "/images/new-background-pic.png" | relURL }}"
            alt="{{ $hero.photoAlt }}"
            width="3024" height="4032"
            fetchpriority="high" decoding="async">
-      <div class="hero__photo-gloss" aria-hidden="true"></div>
     </div>
     <figcaption class="hero__caption">{{ $hero.photoCaption }}</figcaption>
   </figure>
 
   {{- /* accent bloom, above the photo, below the copy */}}
-  <div class="hero__veil" aria-hidden="true"></div>
   <div class="hero__wash" aria-hidden="true"></div>
 
   {{- /* ---- copy, centred ------------------------------------------------ */}}
