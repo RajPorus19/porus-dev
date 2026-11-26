@@ -2,6 +2,9 @@
 {{- $projects := where .Site.RegularPages "Section" "projects" -}}
 {{- $projects = where $projects "Params.showInHome" true -}}
 <section class="section gallery" id="projects">
+  <div class="gallery__bg" aria-hidden="true">
+    <ascii-art piece="matrix-rain"></ascii-art>
+  </div>
   <div class="shell">
     <p class="section__label">{{ $gallery.label }}</p>
   </div>

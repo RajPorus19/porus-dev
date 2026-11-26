@@ -7,7 +7,43 @@
     position: relative;
 }
 
+/* --- ascii matrix-rain background ------------------------------------------ */
+
+.home .gallery__bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent);
+}
+
+.home .gallery__bg ascii-art {
+    display: block;
+    flex: none;
+    opacity: 0.3;
+}
+
+.home .gallery__bg ascii-art pre {
+    margin: 0;
+    white-space: pre;
+    line-height: 1.2;
+    letter-spacing: 0;
+    font-size: max(2.8vw, 3.8svh);
+}
+
+/* keep the section's content above the ascii background */
+.home .gallery .shell {
+    position: relative;
+    z-index: 1;
+}
+
 .home .gallery__viewport {
+    position: relative;
+    z-index: 1;
     overflow: clip;
 }
 
