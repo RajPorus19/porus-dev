@@ -1,17 +1,29 @@
 /* ==========================================================================
- _cursor.css — custom pointer. Desktop only, gated by html.has-cursor.
- ========================================================================== */
+   _cursor.css — custom pointer.
+   Three independent guards, because a stray ring on the logo is a visible bug:
+     1. elements start at opacity 0
+     2. the whole root is display:none outside hover-capable pointers
+     3. html.has-cursor is only added by JS after a real pointermove
+   ========================================================================== */
 
-.home .cursor {
+.cursor {
     position: fixed;
     inset: 0;
     pointer-events: none;
     z-index: var(--z-cursor);
     mix-blend-mode: difference;
+    display: none;
+}
+
+/* only a hovering, fine-grained pointer gets the custom cursor */
+@media (hover: hover) and (pointer: fine) {
+    .cursor {
+        display: block;
+    }
 }
 
 .cursor__dot,
-.home .cursor__ring {
+.cursor__ring {
     position: absolute;
     top: 0;
     left: 0;
@@ -19,23 +31,29 @@
     opacity: 0;
 }
 
-.home .cursor__dot {
+.cursor__dot {
     width: 6px;
     height: 6px;
     background: #fff;
 }
 
-.home .cursor__ring {
+.cursor__ring {
     width: 34px;
     height: 34px;
     border: 1px solid #fff;
-    opacity: 0.9;
 }
 
-/* hide the native cursor only when the custom one is live */
-.has-cursor,
-.has-cursor a,
-.home .has-cursor button {
+/* hide the native cursor only when the custom one is actually live */
+html.has-cursor,
+html.has-cursor a,
+html.has-cursor button,
+html.has-cursor [data-cursor] {
     cursor: none;
 }
 
+/* touch devices always keep the native cursor and never see the ring */
+@media (hover: none), (pointer: coarse) {
+    .cursor {
+        display: none !important;
+    }
+}

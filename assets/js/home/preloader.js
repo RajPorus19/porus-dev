@@ -39,6 +39,8 @@ export function initPreloader({ reduced }) {
     const finish = () => {
       if (finished) return;
       finished = true;
+      /* whatever path got us here, never leave the docked wordmark behind */
+      mark.style.cssText = '';
       root.classList.add('is-done');
       root.classList.add('is-idle');
       document.documentElement.classList.remove('has-preloader');
@@ -61,8 +63,12 @@ export function initPreloader({ reduced }) {
         count.textContent = String(Math.round(counter.v)).padStart(3, '0');
       },
       complete: () => {
-        /* 1. dock the wordmark into the navbar brand slot (real FLIP) */
-        const brand = document.querySelector('.navbar-brand');
+        /* 1. dock the wordmark into the navbar brand slot (real FLIP).
+              Desktop only: on narrow viewports the brand rect is unstable
+              (hamburger layout reflow) and docking lands the wordmark on top
+              of the logo. */
+        const canDock = window.matchMedia('(min-width: 1024px)').matches;
+        const brand = canDock ? document.querySelector('.navbar-brand') : null;
         const flipState = brand && mark ? Flip.getState(mark) : null;
 
         if (flipState && brand) {
@@ -104,6 +110,10 @@ export function initPreloader({ reduced }) {
           easing: 'linear',
           complete: () => {
             clearTimeout(safety);
+            /* Reset the inline styles the FLIP handoff wrote, otherwise the
+               wordmark stays position:fixed over the navbar on small screens
+               where the docking rect is wrong. */
+            mark.style.cssText = '';
             finish();
           },
         });

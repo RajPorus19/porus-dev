@@ -1,6 +1,11 @@
 /**
  * cursor.js — dot + lagging ring, difference blend, grows over interactive
- * elements. Desktop pointer only.
+ * elements.
+ *
+ * Desktop pointer only. Nothing renders until a real mouse `pointermove`
+ * arrives, so the ring can never be parked at (0,0) as a stray circle in the
+ * top-left corner — that used to show up on top of the logo, most visibly on
+ * touch devices where `pointerover` fires with no preceding move.
  */
 
 import { gsap } from './libs.js';
@@ -15,23 +20,38 @@ export function initCursor({ reduced, fine }) {
   const ring = root.querySelector('.cursor__ring');
   if (!dot || !ring) return;
 
-  document.documentElement.classList.add('has-cursor');
-  gsap.set([dot, ring], { xPercent: -50, yPercent: -50 });
+  /* Take over the pointer only on a device that actually has a hovering one.
+     `fine` from index.js already encodes `(hover: hover) and (pointer: fine)`,
+     so the extra matchMedia check is redundant and could disagree with it. */
 
+  gsap.set([dot, ring], { xPercent: -50, yPercent: -50, opacity: 0, scale: 0.6 });
+
+  /* quickTo must be created *after* the initial set, otherwise it caches the
+     zero position and never animates away from the corner. */
   const dotX = gsap.quickTo(dot, 'x', { duration: 0.12, ease: 'power3.out' });
   const dotY = gsap.quickTo(dot, 'y', { duration: 0.12, ease: 'power3.out' });
   const ringX = gsap.quickTo(ring, 'x', { duration: 0.45, ease: 'power3.out' });
   const ringY = gsap.quickTo(ring, 'y', { duration: 0.45, ease: 'power3.out' });
 
-  let shown = false;
+  let armed = false;
+
+  const arm = (e) => {
+    armed = true;
+    /* jump straight to the pointer — no swoop in from the corner */
+    dotX(e.clientX);
+    dotY(e.clientY);
+    ringX(e.clientX);
+    ringY(e.clientY);
+    document.documentElement.classList.add('has-cursor');
+    gsap.to(dot, { opacity: 1, scale: 1, duration: 0.25 });
+    gsap.to(ring, { opacity: 0.9, scale: 1, duration: 0.25 });
+  };
 
   window.addEventListener(
     'pointermove',
     (e) => {
-      if (!shown) {
-        shown = true;
-        gsap.to([dot, ring], { opacity: 1, duration: 0.3 });
-      }
+      if (e.pointerType !== 'mouse') return;
+      if (!armed) arm(e);
       dotX(e.clientX);
       dotY(e.clientY);
       ringX(e.clientX);
@@ -41,7 +61,8 @@ export function initCursor({ reduced, fine }) {
   );
 
   document.addEventListener('pointerover', (e) => {
-    const hit = e.target.closest('a, button, [data-cursor="link"]');
+    if (!armed || e.pointerType !== 'mouse') return;
+    const hit = e.target.closest('a, button, [data-cursor]');
     gsap.to(ring, {
       scale: hit ? 2.4 : 1,
       opacity: hit ? 0.55 : 0.9,
@@ -50,8 +71,11 @@ export function initCursor({ reduced, fine }) {
     });
   });
 
+  /* pointer leaves the window: hide, and re-arm on the next entry */
   document.addEventListener('pointerleave', () => {
-    gsap.to([dot, ring], { opacity: 0, duration: 0.2 });
-    shown = false;
+    if (!armed) return;
+    armed = false;
+    document.documentElement.classList.remove('has-cursor');
+    gsap.to([dot, ring], { opacity: 0, scale: 0.6, duration: 0.2 });
   });
 }

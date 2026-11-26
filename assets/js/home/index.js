@@ -11,7 +11,9 @@
 import { ScrollTrigger } from './libs.js';
 
 const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-const fine = window.matchMedia('(pointer: fine)').matches;
+/* One definition of "can hover", used by every module. Keeping a single
+   query avoids modules disagreeing about the same capability. */
+const fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
 const has = (sel) => Boolean(document.querySelector(sel));
 
