@@ -1,14 +1,14 @@
 /* ==========================================================================
-   _hero.css — centred copy, full-bleed photograph as the background.
+   _hero.css — centred copy, portrait photograph as the background.
 
    Layering inside .hero (bottom to top):
-     0  .hero__frame   the photograph (full-bleed background)
+     0  .hero__frame   the photograph (whole portrait, anchored low)
      1  .hero__wash    accent bloom, ties the photo to the palette
      2  .hero__copy    title, tagline, lead, CTAs — centred
      3  .hero__cue
 
-   The photo fills the hero edge to edge (object-fit: cover) and recedes on
-   scroll while the copy stays centred over it.
+   The photo is shown whole at its natural portrait ratio, anchored to the
+   bottom, and recedes on scroll while the copy stays centred above it.
    ========================================================================== */
 
 .home .hero {
@@ -22,12 +22,14 @@
     isolation: isolate;
 }
 
-/* --- photograph (full-bleed background layer) ----------------------------- */
+/* --- photograph (background layer) ---------------------------------------- */
 
 .home .hero__frame {
     position: absolute;
     z-index: 0;
-    inset: 0;
+    left: 50%;
+    bottom: 0;
+    translate: -50% 0;
     margin: 0;
     transform-origin: 50% 85%;
     /* recede: drift down and shrink a touch as the page moves on */
@@ -39,17 +41,13 @@
     will-change: transform, opacity;
 }
 
-.home .hero__photo {
-    position: absolute;
-    inset: 0;
-}
-
-/* cover, never contain: the photo fills the hero, cropping the overflow */
+/* natural portrait: the photo is shown whole, anchored to the bottom */
 .home .hero__photo img {
     display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    width: auto;
+    height: auto;
+    max-width: 100vw;
+    max-height: 100svh;
 }
 
 .home .hero__caption {

@@ -1,8 +1,9 @@
 {{- $hero := .Site.Language.Params.hero | default .Site.Params.hero -}}
 <section class="hero" id="hero">
-  {{- /* ---- the photograph sits behind everything, full-bleed ---------------
-         It covers the whole hero (object-fit: cover) while the copy stays
-         centred over it. The caption is attached to the image itself. */}}
+  {{- /* ---- the photograph sits behind everything -------------------------
+         Shown whole at its natural portrait ratio and anchored to the bottom,
+         while the copy stays centred above it. The caption is attached to the
+         image itself. */}}
   <figure class="hero__frame" data-hero-frame>
     <div class="hero__photo" data-hero-photo>
       <img src="{{ "/images/new-background-pic.png" | relURL }}"
