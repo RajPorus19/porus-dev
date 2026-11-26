@@ -68,7 +68,7 @@ languages:
       outro:
         label: "Contact"
         headline: "On construit quelque chose ?"
-        email: "rajporus19@gmail.com"
+        email: "raj.porus.hiruthayaraj@gmail.com"
         content: "Un projet, un défi technique, ou juste une discussion — ma boîte reste ouverte."
         asciiWord: "Porus"
       projects:
@@ -81,7 +81,7 @@ languages:
           Tu veux collaborer sur un projet ? Me proposer un défi ?  
           Ou juste discuter tech ? Ma boîte de réception est toujours ouverte !
         btnName: "Me contacter"
-        btnLink: "mailto:rajporus19@gmail.com"
+        btnLink: "mailto:raj.porus.hiruthayaraj@gmail.com"
       terms:
         read: "Lire"
         toc: "Sommaire"
@@ -152,7 +152,7 @@ languages:
       outro:
         label: "Contact"
         headline: "Shall we build something?"
-        email: "rajporus19@gmail.com"
+        email: "raj.porus.hiruthayaraj@gmail.com"
         content: "A project, a technical challenge, or just a chat — my inbox stays open."
         asciiWord: "Porus"
       projects:
@@ -165,7 +165,7 @@ languages:
           Want to collaborate on a project? Challenge me with a new idea?  
           Or just talk tech? My inbox is always open!
         btnName: "Contact me"
-        btnLink: "mailto:rajporus19@gmail.com"
+        btnLink: "mailto:raj.porus.hiruthayaraj@gmail.com"
       terms:
         read: "Read"
         toc: "Table of Contents"
