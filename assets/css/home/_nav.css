@@ -23,57 +23,6 @@
     transition: background-color 260ms var(--ease-out), border-color 260ms var(--ease-out);
 }
 
-/* --- sitting on the hero photograph --------------------------------------
-   While the bar overlaps the photo its content is forced light, regardless of
-   theme, because the scrim behind it is always dark. */
-#profileHeader.nav.is-on-photo .nav__brand,
-#profileHeader.nav.is-on-photo .nav__wordmark,
-#profileHeader.nav.is-on-photo .nav__link,
-#profileHeader.nav.is-on-photo .nav__link:hover,
-#profileHeader.nav.is-on-photo .nav__link:focus-visible {
-    color: #ffffff;
-}
-
-#profileHeader.nav.is-on-photo .nav__link {
-    color: color-mix(in srgb, #ffffff 78%, transparent);
-}
-
-#profileHeader.nav.is-on-photo .nav__palette {
-    border-color: color-mix(in srgb, #ffffff 30%, transparent);
-    color: color-mix(in srgb, #ffffff 82%, transparent);
-    background: color-mix(in srgb, #ffffff 8%, transparent);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-}
-
-#profileHeader.nav.is-on-photo .nav__palette:hover {
-    background: color-mix(in srgb, #ffffff 16%, transparent);
-    border-color: color-mix(in srgb, #ffffff 52%, transparent);
-    color: #ffffff;
-}
-
-#profileHeader.nav.is-on-photo .nav__kbd {
-    background: color-mix(in srgb, #ffffff 14%, transparent);
-    color: color-mix(in srgb, #ffffff 78%, transparent);
-}
-
-#profileHeader.nav.is-on-photo .nav__lang-opt {
-    color: #ffffff;
-}
-
-#profileHeader.nav.is-on-photo .nav__toggle {
-    color: color-mix(in srgb, #ffffff 82%, transparent);
-}
-
-#profileHeader.nav.is-on-photo .nav__toggle:hover {
-    color: #ffffff;
-    background: color-mix(in srgb, #ffffff 14%, transparent);
-}
-
-#profileHeader.nav.is-on-photo .nav__burger-line {
-    background: #ffffff;
-}
-
 #profileHeader.nav.is-stuck {
     background: color-mix(in srgb, var(--surface) 88%, transparent) !important;
     border-bottom-color: var(--hairline);

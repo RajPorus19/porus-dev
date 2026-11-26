@@ -1,122 +1,78 @@
 /* ==========================================================================
-   _hero.css — centred hero over a photographic background.
+   _hero.css — split hero: copy column + framed photograph.
 
-   Stacking order inside .hero:
-     1  .hero__bg         the photograph + scrim (z-index 0)
-     2  .hero__canvas     ambient dots (z-index 1, above the photo, very faint)
-     3  .hero__center     the content column (z-index 2)
+   Why split instead of full-bleed: the photograph is a three-panel collage
+   (portrait on the left half, painted ceiling top-right, white facade
+   bottom-right). As a full-bleed cover it cropped the subject, and centred
+   display type landed straight on his face. Treating it as a framed object
+   keeps every panel whole, keeps the subject visible, and lets the type live
+   on the page background where it can be read.
+
+   Scroll behaviour: the frame recedes (fades, desaturates, drifts) as the page
+   moves, so the hero dissolves into the content rather than being replaced by
+   an abrupt cut. All of it is driven by CSS custom properties updated once per
+   frame in hero.js — no per-element scroll listeners.
    ========================================================================== */
 
 .home .hero {
     position: relative;
     min-height: 100svh;
     display: grid;
-    place-items: center;
-    padding-block: clamp(6rem, 12vh, 9rem) clamp(5rem, 10vh, 7rem);
+    align-content: center;
+    padding-block: clamp(6.5rem, 13vh, 9.5rem) clamp(5rem, 9vh, 7rem);
     overflow: clip;
     isolation: isolate;
 }
 
-/* --- background ----------------------------------------------------------- */
-
-.home .hero__bg {
+/* --- ambient wash --------------------------------------------------------
+   A soft accent bloom behind the frame. Replaces the flat dark scrim and ties
+   the photograph to the indigo palette instead of fighting it. */
+.home .hero__wash {
     position: absolute;
-    inset: 0;
+    inset: -10% -5% auto;
+    height: 130%;
     z-index: 0;
-}
-
-.home .hero__bg-media,
-.home .hero__bg-media img {
-    display: block;
-    width: 100%;
-    height: 100%;
-}
-
-.home .hero__bg-media img {
-    object-fit: cover;
-    object-position: center 38%;
-    /* the photo is decorative; a slow drift keeps it from feeling static */
-    animation: hero-drift 32s var(--ease-in-out) infinite alternate;
-    will-change: transform;
-}
-
-@keyframes hero-drift {
-    from { transform: scale(1.06) translate3d(0, 0, 0); }
-    to   { transform: scale(1.12) translate3d(-1.5%, -1%, 0); }
-}
-
-/* Three stacked passes so the photo still reads as a photograph:
-   1. a soft vignette that pulls attention to the centre
-   2. a radial "spotlight" behind the text column only, so the middle is
-      legible while the edges of the image stay open
-   3. a top gradient for navbar contrast and a bottom gradient for the cue */
-.home .hero__bg-scrim {
-    position: absolute;
-    inset: 0;
     background:
-        /* vignette */
-        radial-gradient(120% 90% at 50% 45%,
-            transparent 38%,
-            color-mix(in srgb, #06070b 62%, transparent) 100%),
-        /* text column spotlight */
-        radial-gradient(58% 46% at 50% 48%,
-            color-mix(in srgb, #06070b 52%, transparent) 0%,
-            color-mix(in srgb, #06070b 26%, transparent) 58%,
-            transparent 100%),
-        /* navbar + scroll cue */
-        linear-gradient(to bottom,
-            color-mix(in srgb, #06070b 70%, transparent) 0%,
-            color-mix(in srgb, #06070b 12%, transparent) 18%,
-            transparent 34%,
-            transparent 74%,
-            color-mix(in srgb, #06070b 78%, transparent) 100%);
-    backdrop-filter: saturate(0.92);
-    -webkit-backdrop-filter: saturate(0.92);
-}
-
-/* --- ambient canvas ------------------------------------------------------- */
-
-.home .hero__canvas {
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    width: 100%;
-    height: 100%;
-    opacity: 0.28;
+        radial-gradient(48% 42% at 72% 38%,
+            color-mix(in srgb, var(--accent) 20%, transparent) 0%,
+            transparent 70%),
+        radial-gradient(40% 36% at 18% 70%,
+            color-mix(in srgb, var(--accent) 10%, transparent) 0%,
+            transparent 72%);
     pointer-events: none;
 }
 
-/* --- content column ------------------------------------------------------- */
+/* --- grid ---------------------------------------------------------------- */
 
-.home .hero__center {
+.home .hero__grid {
     position: relative;
-    z-index: 2;
+    z-index: 1;
     width: var(--shell);
+    margin-inline: auto;
     display: grid;
-    place-items: center;
-    text-align: center;
+    grid-template-columns: minmax(0, 1.02fr) minmax(0, 0.98fr);
+    align-items: center;
+    gap: clamp(2rem, 5vw, 4.5rem);
 }
 
-.home .hero__stack {
+/* --- copy ---------------------------------------------------------------- */
+
+.home .hero__copy {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    max-width: 54rem;
+    align-items: flex-start;
+    min-width: 0;
 }
-
-/* --- intro line ----------------------------------------------------------- */
 
 .home .hero__intro {
     display: flex;
     align-items: center;
-    justify-content: center;
     gap: var(--space-3);
     font-size: var(--type-mono);
     font-family: ui-monospace, "SFMono-Regular", Menlo, monospace;
     letter-spacing: 0.16em;
     text-transform: uppercase;
-    color: color-mix(in srgb, #ffffff 72%, transparent);
-    margin-bottom: var(--space-4);
+    color: var(--ink-muted);
 }
 
 .home .hero__dot {
@@ -125,19 +81,18 @@
     border-radius: 50%;
     background: var(--accent);
     flex: none;
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent);
 }
 
-/* --- title ---------------------------------------------------------------- */
-
+/* Type is sized against the copy column, not the viewport, so it can never
+   grow wide enough to run into the frame. */
 .home .hero__title {
-    font-size: var(--type-mega);
-    line-height: 0.84;
-    letter-spacing: -0.045em;
+    font-size: clamp(3rem, 8.4vw, 7.5rem);
+    line-height: 0.86;
+    letter-spacing: -0.05em;
     text-transform: uppercase;
-    /* on a photo, white is the only colour that reads at this size */
-    color: #ffffff;
-    text-shadow: 0 2px 40px rgba(0, 0, 0, 0.35);
+    margin-top: var(--space-4);
+    color: var(--ink);
 }
 
 .home .hero__line {
@@ -150,14 +105,12 @@
     will-change: transform;
 }
 
-/* --- tagline / lead ------------------------------------------------------- */
-
 .home .hero__tagline {
     font-family: "Alata", sans-serif;
-    font-size: var(--type-title);
-    color: color-mix(in srgb, #ffffff 76%, transparent);
-    min-height: 1.2em;
-    margin-top: var(--space-5);
+    font-size: clamp(1.25rem, 2.1vw, 1.9rem);
+    color: var(--ink-muted);
+    min-height: 1.3em;
+    margin-top: var(--space-4);
 }
 
 .home .hero__tagline-item {
@@ -165,12 +118,11 @@
 }
 
 .home .hero__lead {
-    max-width: 42ch;
+    max-width: 40ch;
     margin-top: var(--space-4);
     font-size: var(--type-body);
-    line-height: 1.6;
-    color: color-mix(in srgb, #ffffff 74%, transparent);
-    text-shadow: 0 1px 18px rgba(0, 0, 0, 0.4);
+    line-height: 1.65;
+    color: var(--ink-muted);
 }
 
 /* --- actions -------------------------------------------------------------- */
@@ -179,23 +131,22 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    justify-content: center;
     gap: var(--space-4);
-    margin-top: var(--space-7);
+    margin-top: var(--space-6);
 }
 
 .home .cta {
     display: inline-flex;
     align-items: center;
     gap: var(--space-2);
-    padding: 0.95rem 2rem;
+    padding: 0.9rem 1.9rem;
     border-radius: var(--radius-pill);
     background: var(--accent);
     color: #ffffff;
     font-family: "Alata", sans-serif;
-    font-size: 1rem;
+    font-size: 0.95rem;
     will-change: transform;
-    box-shadow: 0 10px 34px -8px color-mix(in srgb, var(--accent) 70%, transparent);
+    box-shadow: 0 10px 30px -10px color-mix(in srgb, var(--accent) 80%, transparent);
 }
 
 .home .cta__arrow {
@@ -207,43 +158,119 @@
     transform: translateX(4px);
 }
 
-.home .cta:focus-visible {
-    outline: 2px solid #ffffff;
+.home .cta:focus-visible,
+.home .ghost:focus-visible {
+    outline: 2px solid var(--accent);
     outline-offset: 3px;
 }
 
-/* ghost button reads as glass over the photo */
 .home .ghost {
     display: inline-flex;
     align-items: center;
     gap: var(--space-2);
-    padding: 0.95rem 1.75rem;
-    border-radius: var(--radius-pill);
-    border: 1px solid color-mix(in srgb, #ffffff 34%, transparent);
-    background: color-mix(in srgb, #ffffff 8%, transparent);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    color: #ffffff;
-    transition: background-color var(--dur-2) var(--ease-out),
-                border-color var(--dur-2) var(--ease-out);
+    padding-block: 0.45rem;
+    border-bottom: 1px solid var(--hairline);
+    color: var(--ink-muted);
+    transition: color var(--dur-2) var(--ease-out), border-color var(--dur-2) var(--ease-out);
 }
 
 .home .ghost:hover {
-    background: color-mix(in srgb, #ffffff 16%, transparent);
-    border-color: color-mix(in srgb, #ffffff 58%, transparent);
+    color: var(--ink);
+    border-color: var(--ink);
 }
 
-.home .ghost:focus-visible {
-    outline: 2px solid #ffffff;
-    outline-offset: 3px;
+/* --- framed photograph ----------------------------------------------------
+   A "window" object: radius, hairline, inner gloss and a deep soft shadow,
+   echoing the chrome/glass interfaces the palette already hints at.
+   --p is written by hero.js on scroll: 0 = top of page, 1 = frame gone. */
+
+.home .hero__frame {
+    position: relative;
+    margin: 0;
+    justify-self: end;
+    width: 100%;
+    max-width: 34rem;
+    /* recede: drift up, shrink a touch, fade out */
+    transform:
+        translate3d(0, calc(var(--p, 0) * -46px), 0)
+        scale(calc(1 - var(--p, 0) * 0.06));
+    opacity: calc(1 - var(--p, 0) * 0.92);
+    filter: saturate(calc(1 - var(--p, 0) * 0.55));
+    will-change: transform, opacity;
+}
+
+.home .hero__photo {
+    position: relative;
+    border-radius: 1.1rem;
+    overflow: clip;
+    background: var(--surface-2);
+    padding: 0.55rem;
+    box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.14) inset,
+        0 0 0 1px color-mix(in srgb, var(--ink) 12%, transparent),
+        0 28px 70px -24px rgba(0, 0, 0, 0.55),
+        0 10px 26px -16px color-mix(in srgb, var(--accent) 60%, transparent);
+}
+
+.home .hero__photo picture {
+    display: block;
+    border-radius: 0.7rem;
+    overflow: clip;
+}
+
+/* contain, never cover: the collage is three panels and cropping it would cut
+   the subject. The frame simply matches its natural 16:10. */
+.home .hero__photo img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 10;
+    object-fit: contain;
+    border-radius: 0.7rem;
+}
+
+/* a single restrained diagonal gloss, the only "glassy" flourish */
+.home .hero__photo-gloss {
+    position: absolute;
+    inset: 0.55rem;
+    border-radius: 0.7rem;
+    pointer-events: none;
+    background: linear-gradient(
+        118deg,
+        rgba(255, 255, 255, 0.16) 0%,
+        rgba(255, 255, 255, 0.05) 22%,
+        transparent 44%
+    );
+    mix-blend-mode: soft-light;
+}
+
+.home .hero__caption {
+    margin-top: var(--space-3);
+    padding-inline: 0.15rem;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-family: ui-monospace, "SFMono-Regular", Menlo, monospace;
+    font-size: 0.6875rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+}
+
+.home .hero__caption::before {
+    content: "";
+    width: 1.1rem;
+    height: 1px;
+    background: var(--accent);
+    flex: none;
 }
 
 /* --- scroll cue ----------------------------------------------------------- */
 
 .home .hero__cue {
     position: absolute;
-    z-index: 2;
-    bottom: var(--space-5);
+    z-index: 1;
+    bottom: var(--space-4);
     left: 50%;
     translate: -50% 0;
     display: flex;
@@ -253,53 +280,79 @@
     font-size: var(--type-mono);
     letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: color-mix(in srgb, #ffffff 55%, transparent);
+    color: var(--ink-muted);
 }
 
 .home .hero__cue-line {
     width: 1px;
-    height: 2.5rem;
-    background: linear-gradient(to bottom,
-        color-mix(in srgb, #ffffff 45%, transparent),
-        transparent);
+    height: 2.25rem;
+    background: linear-gradient(to bottom, var(--hairline), transparent);
 }
 
-/* --- responsive ----------------------------------------------------------- */
+/* ==========================================================================
+   Responsive
+   Below 1000px the two-column split gets cramped, so the frame moves above the
+   copy and becomes a full-width banner — still whole, still uncropped.
+   ========================================================================== */
 
-@media (max-width: 899px) {
-    /* the photo is a portrait collage: on narrow screens the subject should
-       stay in frame, so bias the crop upward and drop the drift */
-    .home .hero__bg-media img {
-        object-position: center 30%;
-        animation: none;
-        transform: scale(1.02);
-    }
-
+@media (max-width: 999px) {
     .home .hero {
-        padding-block: 5.5rem clamp(4rem, 8vh, 6rem);
+        padding-block: 5.5rem 4rem;
+        align-content: start;
     }
 
-    .home .hero__lead {
-        max-width: 34ch;
-        font-size: 0.95rem;
+    .home .hero__grid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: var(--space-6);
+    }
+
+    .home .hero__frame {
+        order: -1;
+        justify-self: stretch;
+        max-width: none;
+    }
+
+    .home .hero__title {
+        font-size: clamp(2.75rem, 12vw, 4.5rem);
+    }
+
+    .home .hero__cue {
+        display: none;
+    }
+}
+
+@media (max-width: 640px) {
+    .home .hero__photo {
+        padding: 0.4rem;
+    }
+
+    .home .hero__caption {
+        font-size: 0.625rem;
     }
 
     .home .hero__actions {
-        flex-direction: column;
         width: 100%;
-        max-width: 20rem;
     }
 
     .home .cta,
     .home .ghost {
         justify-content: center;
-        width: 100%;
+    }
+
+    .home .cta {
+        flex: 1;
     }
 }
 
+/* ==========================================================================
+   Reduced motion: the frame stays put and simply fades.
+   ========================================================================== */
+
 @media (prefers-reduced-motion: reduce) {
-    .home .hero__bg-media img {
-        animation: none;
+    .home .hero__frame {
         transform: none;
+        filter: none;
+        opacity: calc(1 - var(--p, 0) * 0.6);
+        will-change: auto;
     }
 }

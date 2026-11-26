@@ -1,11 +1,19 @@
 /**
- * hero.js — kinetic typography, rotating tagline, magnetic CTA, ambient canvas.
- * anime.js does every discrete animation. GSAP quickTo does pointer work only.
+ * hero.js — kinetic typography, rotating tagline, magnetic CTA, photo recession.
+ *
+ * anime.js drives every discrete animation. GSAP quickTo is used only for
+ * pointer smoothing.
+ *
+ * The photograph's scroll recession is intentionally NOT an animation library
+ * job: one passive scroll listener writes a single normalised progress value
+ * (`--p`, 0→1) onto the hero, and CSS interpolates transform/opacity/filter
+ * from it. That keeps the work on the compositor and avoids a timeline ticking
+ * on every scroll event.
  */
 
 import { gsap, anime } from './libs.js';
 import { EASE_OUT } from './libs.js';
-import { state, onIntroDone } from './state.js';
+import { onIntroDone } from './state.js';
 
 export function initHero({ reduced, fine }) {
   const hero = document.querySelector('.hero');
@@ -14,10 +22,11 @@ export function initHero({ reduced, fine }) {
   const lines = hero.querySelectorAll('[data-hero-line]');
   const fades = hero.querySelectorAll('[data-hero-fade]');
   const tagline = hero.querySelector('[data-hero-tagline]');
-  const canvas = hero.querySelector('[data-hero-canvas]');
 
   if (reduced) {
     gsap.set([...lines, ...fades], { clearProps: 'all' });
+    /* still let the photo fade, just without motion — CSS handles that path */
+    initPhotoRecession(hero);
     return;
   }
 
@@ -108,87 +117,63 @@ export function initHero({ reduced, fine }) {
     });
   }
 
-  /* --- 4. ambient canvas --------------------------------------------- */
-  if (canvas) initCanvas(canvas, { reduced });
+  /* --- 4. photograph recession ---------------------------------------- */
+  initPhotoRecession(hero);
 }
 
-/** Drifting dots. Paused when off-screen. DPR capped at 1.5. */
-function initCanvas(canvas, { reduced }) {
-  if (reduced) return;
+/**
+ * Writes `--p` (0 → 1) on the hero as it scrolls away.
+ *
+ * 0   = page top, photograph at full presence
+ * 1   = the hero has been scrolled past, photograph fully receded
+ *
+ * A single passive listener plus one rAF write per frame. The value is only
+ * touched while the hero is on screen, so scrolling further down costs nothing.
+ */
+function initPhotoRecession(hero) {
+  const frame = hero.querySelector('[data-hero-frame]');
+  if (!frame) return;
 
-  const ctx = canvas.getContext('2d');
-  const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
   let raf = 0;
+  let ticking = false;
   let visible = true;
-  let dots = [];
 
-  const resize = () => {
-    const { width, height } = canvas.getBoundingClientRect();
-    canvas.width = Math.round(width * dpr);
-    canvas.height = Math.round(height * dpr);
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  const update = () => {
+    ticking = false;
+    if (!visible) return;
 
-    const count = Math.min(70, Math.round((width * height) / 22000));
-    dots = Array.from({ length: count }, () => ({
-      x: Math.random() * width,
-      y: Math.random() * height,
-      r: Math.random() * 1.6 + 0.4,
-      vx: (Math.random() - 0.5) * 0.14,
-      vy: (Math.random() - 0.5) * 0.14,
-    }));
-    draw();
+    const rect = hero.getBoundingClientRect();
+    /* progress of the hero being consumed: 0 at top, 1 once the hero's own
+       height has scrolled away. Clamped so sub-pixel scroll can't overshoot. */
+    const total = rect.height || 1;
+    const scrolled = Math.min(Math.max(-rect.top, 0), total);
+    const p = scrolled / total;
+
+    hero.style.setProperty('--p', p.toFixed(3));
   };
 
-  const draw = () => {
-    const { width, height } = canvas.getBoundingClientRect();
-    ctx.clearRect(0, 0, width, height);
-
-    const accent = getComputedStyle(document.documentElement)
-      .getPropertyValue('--accent')
-      .trim() || '#4f46e5';
-
-    ctx.fillStyle = accent;
-
-    for (const d of dots) {
-      d.x += d.vx;
-      d.y += d.vy;
-      if (d.x < 0 || d.x > width) d.vx *= -1;
-      if (d.y < 0 || d.y > height) d.vy *= -1;
-      ctx.globalAlpha = 0.55;
-      ctx.beginPath();
-      ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
-      ctx.fill();
-    }
+  const onScroll = () => {
+    if (ticking) return;
+    ticking = true;
+    raf = requestAnimationFrame(update);
   };
 
-  const loop = () => {
-    if (visible) {
-      for (const d of dots) {
-        d.x += d.vx;
-        d.y += d.vy;
-        const w = canvas.width / dpr;
-        const h = canvas.height / dpr;
-        if (d.x < 0 || d.x > w) d.vx *= -1;
-        if (d.y < 0 || d.y > h) d.vy *= -1;
-      }
-      draw();
-    }
-    raf = requestAnimationFrame(loop);
-  };
-
+  /* stop doing any work once the hero is off screen */
   new IntersectionObserver(
     ([entry]) => {
       visible = entry.isIntersecting;
+      if (visible) onScroll();
     },
-    { threshold: 0 }
-  ).observe(canvas);
+    { threshold: 0, rootMargin: '80px' }
+  ).observe(hero);
 
-  window.addEventListener('resize', resize, { passive: true });
-  resize();
-  raf = requestAnimationFrame(loop);
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll, { passive: true });
 
+  update();
+
+  /* release the frame's layer hints once it is fully faded */
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) cancelAnimationFrame(raf);
-    else raf = requestAnimationFrame(loop);
   });
 }

@@ -1,19 +1,12 @@
 {{- $hero := .Site.Language.Params.hero | default .Site.Params.hero -}}
 <section class="hero" id="hero">
-  {{- /* background: responsive WebP with a CSS gradient scrim for text contrast */}}
-  <div class="hero__bg" aria-hidden="true">
-    <picture class="hero__bg-media">
-      <source media="(max-width: 820px)" srcset="{{ "/images/hero-bg-768.webp" | relURL }}">
-      <source media="(max-width: 1400px)" srcset="{{ "/images/hero-bg-1280.webp" | relURL }}">
-      <img src="{{ "/images/hero-bg-1920.webp" | relURL }}" alt="" width="1920" height="1199" fetchpriority="high" decoding="async">
-    </picture>
-    <div class="hero__bg-scrim"></div>
-  </div>
+  {{- /* ambient wash: a soft accent bloom behind everything, ties the photo to
+         the page palette instead of sitting on a generic dark scrim */}}
+  <div class="hero__wash" aria-hidden="true"></div>
 
-  <canvas class="hero__canvas" data-hero-canvas aria-hidden="true"></canvas>
-
-  <div class="hero__center">
-    <div class="hero__stack">
+  <div class="hero__grid">
+    {{- /* ---- copy column ---- */}}
+    <div class="hero__copy">
       <p class="hero__intro" data-hero-fade>
         {{- with $hero.intro }}
           <span class="hero__dot" aria-hidden="true"></span>
@@ -50,6 +43,26 @@
         {{- end }}
       </div>
     </div>
+
+    {{- /* ---- framed photograph ----
+           The collage is three panels: portrait on the left half, painted
+           ceiling top-right, white building bottom-right. The frame shows it
+           whole (object-fit: contain) so nobody is cropped, and the caption
+           names the place rather than pretending it is a stock backdrop. */}}
+    <figure class="hero__frame" data-hero-frame>
+      <div class="hero__photo" data-hero-photo>
+        <picture>
+          <source media="(max-width: 640px)" srcset="{{ "/images/hero-bg-768.webp" | relURL }}">
+          <source media="(max-width: 1280px)" srcset="{{ "/images/hero-bg-1280.webp" | relURL }}">
+          <img src="{{ "/images/hero-bg-1920.webp" | relURL }}"
+               alt="{{ $hero.photoAlt }}"
+               width="1920" height="1199"
+               fetchpriority="high" decoding="async">
+        </picture>
+        <div class="hero__photo-gloss" aria-hidden="true"></div>
+      </div>
+      <figcaption class="hero__caption">{{ $hero.photoCaption }}</figcaption>
+    </figure>
   </div>
 
   <p class="hero__cue" data-hero-fade aria-hidden="true">

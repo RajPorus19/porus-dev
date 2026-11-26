@@ -44,6 +44,8 @@ languages:
           - "Curieux de tout"
           - "Constructeur"
         scrollCue: "Scroll"
+        photoAlt: "Cour intérieure d'un palais aux murs de zellige, un homme debout près de la fontaine, un plafond peint et une façade blanche"
+        photoCaption: "Palais · zellige & plafond peint"
         button:
           enable: true
           name: "Voir mes projets"
@@ -133,6 +135,8 @@ languages:
           - "Curious about everything"
           - "Builder"
         scrollCue: "Scroll"
+        photoAlt: "Inner courtyard of a palace with zellige walls, a man standing by the fountain, a painted ceiling and a white facade"
+        photoCaption: "Palace · zellige & painted ceiling"
         button:
           enable: true
           name: "See my projects"
