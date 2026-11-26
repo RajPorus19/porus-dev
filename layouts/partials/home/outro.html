@@ -1,5 +1,6 @@
 {{- $outro := .Site.Language.Params.outro | default .Site.Params.outro -}}
 <section class="section outro" id="contact">
+  <div class="outro__bg" data-outro-bg aria-hidden="true"></div>
   <div class="shell">
     <h2 class="outro__lead" data-outro-lead data-text="{{ $outro.headline }}">{{ $outro.headline }}</h2>
 

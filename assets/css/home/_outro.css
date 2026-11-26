@@ -1,11 +1,109 @@
 /* ==========================================================================
-   _outro.css — contact handoff + the one ascii.rest use.
+   _outro.css — contact handoff over an ascii.rest earthrise.
+   --earth (0 → 1) is written by outro.js as the section scrolls in.
    ========================================================================== */
 
 .home .outro {
+    --earth: 0;
+    position: relative;
+    overflow: clip;
+    isolation: isolate;
     padding-block: var(--section-y) var(--space-8);
     border-top: 1px solid var(--hairline);
     text-align: center;
+    background-color: color-mix(in srgb, transparent calc((1 - var(--earth)) * 100%), #030408 calc(var(--earth) * 100%));
+    color: color-mix(in srgb, var(--ink) calc((1 - var(--earth)) * 100%), #f7f4ee calc(var(--earth) * 100%));
+}
+
+.home .outro__bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+    opacity: 0;
+    background: #030408;
+}
+
+/* The piece is 200×100. Keep the host the size of the section so it cannot
+   cover the rest of the page, and so it only plays once this box is visible. */
+.home .outro__bg ascii-art {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.home .outro__bg ascii-art pre {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin: 0;
+    transform: translate(-50%, -50%);
+    white-space: pre;
+    line-height: 1;
+    letter-spacing: 0;
+    font-size: max(0.42rem, 0.9vw);
+}
+
+.home .outro__bg ascii-art canvas {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* The near ground of the scene is almost white. Darken it so the links
+   and the wordmark stay readable, and so the bottom edge is not a white band. */
+.home .outro__bg::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(
+        to bottom,
+        transparent 0%,
+        transparent 38%,
+        rgb(3 4 8 / 0.55) 68%,
+        #030408 100%
+    );
+}
+
+.home .outro .shell {
+    position: relative;
+    z-index: 1;
+}
+
+.home .outro .shell::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    left: 50%;
+    bottom: -12%;
+    width: min(44rem, 100%);
+    height: 118%;
+    transform: translateX(-50%);
+    pointer-events: none;
+    opacity: var(--earth);
+    background: radial-gradient(
+        ellipse at 50% 62%,
+        rgb(3 4 8 / 0.82) 0%,
+        rgb(3 4 8 / 0.55) 46%,
+        transparent 74%
+    );
+}
+
+/* Theme copyright footer. This page already ends on the contact section. */
+.home ~ footer,
+body:has(.home) > footer {
+    display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .home .outro {
+        --earth: 1;
+    }
 }
 
 .home .outro__lead {
@@ -29,13 +127,18 @@
     font-family: "Alata", sans-serif;
     font-size: clamp(1.25rem, 3.4vw, 2.25rem);
     letter-spacing: -0.02em;
-    color: var(--accent);
+    color: color-mix(in srgb, var(--accent) calc((1 - var(--earth)) * 100%), #a8d3f6 calc(var(--earth) * 100%));
     border-bottom: 1px solid transparent;
     transition: border-color var(--dur-2) var(--ease-out);
 }
 
 .home .outro__mail:hover {
     border-color: var(--accent);
+}
+
+.home .outro .u-muted,
+.home .outro__links {
+    color: color-mix(in srgb, var(--ink-muted) calc((1 - var(--earth)) * 100%), #cfcac1 calc(var(--earth) * 100%));
 }
 
 .home .outro__links {
@@ -47,11 +150,10 @@
     font-size: var(--type-mono);
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--ink-muted);
 }
 
 .home .outro__links a:hover {
-    color: var(--ink);
+    color: color-mix(in srgb, var(--ink) calc((1 - var(--earth)) * 100%), #fff calc(var(--earth) * 100%));
 }
 
 /* closing wordmark: an ascii.rest block-letter banner. It draws a fixed 66×8
@@ -62,7 +164,7 @@
     margin-top: var(--space-7);
     display: flex;
     justify-content: center;
-    color: var(--ink);
+    color: inherit;
     user-select: none;
 }
 
