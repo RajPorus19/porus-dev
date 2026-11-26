@@ -43,7 +43,6 @@ languages:
           - "Développeur full-stack"
           - "Curieux de tout"
           - "Concepteur"
-        scrollCue: "Scroll"
         photoAlt: "Cour intérieure d'un palais aux murs de zellige, un homme debout près de la fontaine, un plafond peint et une façade blanche"
         photoCaption: "Musée national du Bardo (Algérie)"
         button:
@@ -59,7 +58,7 @@ languages:
           download: false
           newPage: false
       gallery:
-        label: "Projets sélectionnés"
+        label: "les projets récents"
       marquee:
         label: "Technologies et domaines"
         items:
@@ -134,7 +133,6 @@ languages:
           - "Full-stack developer"
           - "Curious about everything"
           - "Builder"
-        scrollCue: "Scroll"
         photoAlt: "Inner courtyard of a palace with zellige walls, a man standing by the fountain, a painted ceiling and a white facade"
         photoCaption: "Bardo National Museum of Prehistory and Ethnography (Algeria)"
         button:
@@ -150,7 +148,7 @@ languages:
           download: false
           newPage: false
       gallery:
-        label: "Selected projects"
+        label: "recent projects"
       marquee:
         label: "Technologies and fields"
         items:

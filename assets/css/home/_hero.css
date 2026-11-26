@@ -7,7 +7,6 @@
      2  .hero__wash    accent bloom, ties the page to the palette
      3  .hero__copy    title, tagline, lead, CTAs — centred
         .hero__halo::before  static readability glow, ignores the pointer
-     4  .hero__cue
 
    Two independent paints. The halo sits behind the copy whether or not a
    pointer is present. The veil is a separate full-hero layer: it only tracks
@@ -193,6 +192,8 @@
 }
 
 .home .hero__tagline {
+    display: grid;
+    justify-items: center;
     font-family: "Alata", sans-serif;
     font-size: clamp(1.25rem, 2.4vw, 2rem);
     color: var(--ink-muted);
@@ -200,7 +201,9 @@
     margin-top: var(--space-4);
 }
 
+/* stacked in one cell so the halo hugs the visible phrase, not the whole list */
 .home .hero__tagline-item {
+    grid-area: 1 / 1;
     display: inline-block;
 }
 
@@ -223,27 +226,33 @@
     isolation: isolate;
 }
 
+/* A negative z-index slips behind the page background, so the plate sits at 0
+   and the real content is lifted above it. */
+.home .hero__halo > :not(.u-sr-only) {
+    position: relative;
+    z-index: 1;
+}
+
 .home .hero__halo::before {
     content: "";
     position: absolute;
-    z-index: -1;
-    inset: -0.9rem -1.5rem;
+    z-index: 0;
+    inset: -1.15rem -1.85rem;
     border-radius: 50%;
     pointer-events: none;
     background: radial-gradient(
         ellipse at center,
-        color-mix(in srgb, var(--surface) 97%, var(--accent) 3%) 0%,
-        color-mix(in srgb, var(--surface) 90%, transparent) 42%,
-        color-mix(in srgb, var(--surface) 55%, transparent) 68%,
+        color-mix(in srgb, var(--surface) 98%, var(--accent) 2%) 0%,
+        color-mix(in srgb, var(--surface) 94%, transparent) 58%,
         transparent 100%
     );
-    filter: blur(12px);
+    filter: blur(18px);
 }
 
 /* the word is huge, so the same rem inset would be a tight stripe */
 .home .hero__title.hero__halo::before {
-    inset: -0.18em -0.06em;
-    filter: blur(0.07em);
+    inset: -0.22em -0.08em;
+    filter: blur(0.09em);
 }
 
 /* --- actions -------------------------------------------------------------- */
@@ -305,34 +314,9 @@
     border-color: var(--ink);
 }
 
-/* --- scroll cue ----------------------------------------------------------- */
-
-.home .hero__cue {
-    position: absolute;
-    z-index: 4;
-    bottom: 0.35rem;
-    left: 50%;
-    translate: -50% 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: var(--space-1);
-    font-size: 0.625rem;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: var(--ink-muted);
-}
-
-.home .hero__cue-line {
-    width: 1px;
-    height: 1.4rem;
-    background: linear-gradient(to bottom, var(--hairline), transparent);
-}
-
 /* ==========================================================================
    Responsive
-   Below 900px there is no room for a tall centred stack plus a photo, so the
-   photo shortens, the copy tightens, and the cue is dropped.
+   Below 900px the copy tightens. The photograph, when present, shortens.
    ========================================================================== */
 
 @media (max-width: 899px) {
@@ -353,10 +337,6 @@
         inset-inline-start: 0.75rem;
         bottom: 0.75rem;
         font-size: 0.5625rem;
-    }
-
-    .home .hero__cue {
-        display: none;
     }
 }
 

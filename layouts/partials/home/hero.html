@@ -33,7 +33,7 @@
       {{- end }}
     </p>
 
-    <p class="hero__lead u-balance hero__halo" data-hero-fade>{{ $hero.content | markdownify }}</p>
+    <p class="hero__lead u-balance hero__halo" data-hero-fade><span>{{ $hero.content | markdownify }}</span></p>
 
     <div class="hero__actions hero__halo" data-hero-fade>
       {{- with $hero.button }}
@@ -47,9 +47,4 @@
       {{- end }}
     </div>
   </div>
-
-  <p class="hero__cue" data-hero-fade aria-hidden="true">
-    <span class="hero__cue-line"></span>
-    {{ $hero.scrollCue }}
-  </p>
 </section>
