@@ -206,6 +206,10 @@
     font-size: var(--type-body);
     line-height: 1.65;
     color: var(--ink-muted);
+    background: radial-gradient(ellipse at center,
+        color-mix(in srgb, var(--surface) 86%, var(--accent) 5%) 0%,
+        color-mix(in srgb, var(--surface) 50%, transparent) 55%,
+        transparent 82%);
 }
 
 /* --- actions -------------------------------------------------------------- */
